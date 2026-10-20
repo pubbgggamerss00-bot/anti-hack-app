@@ -10,34 +10,44 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"                           # android/
 APP="$ROOT/app"
 OUT="$ROOT/build"
 KEYSTORE="$ROOT/scripts/release.keystore"
-VERSION="${VERSION:-1.5.2}"
+VERSION="${VERSION:-1.6.0}"
+MYKET_AAR="$ROOT/libs/myket-aar"
+MYKET_JAR="$ROOT/libs/myket-aar/classes.jar"
 
 rm -rf "$OUT"
 mkdir -p "$OUT/classes" "$OUT/dex" "$OUT/compiled-res" "$OUT/gen"
 
-echo "── ۱) کامپایل جاوا با ECJ ──"
-java -jar "$ECJ" -source 8 -target 8 -encoding UTF-8 \
+echo "── ۱) کامپایل جاوا با ECJ (با کتابخانه رسمی مایکت) ──"
+if ! java -jar "$ECJ" -source 8 -target 8 -encoding UTF-8 \
   -bootclasspath "$PLATFORM" \
+  -classpath "$MYKET_JAR" \
   -d "$OUT/classes" \
-  $(find "$APP/src/main/java" -name "*.java") 2>&1 | grep -E "ERROR|problems" || true
+  $(find "$APP/src/main/java" -name "*.java") 2>"$OUT/ecj.log"; then
+  echo "✗ خطای کامپایل:" >&2
+  cat "$OUT/ecj.log" >&2
+  exit 1
+fi
+grep -E "problems" "$OUT/ecj.log" || true
 
-echo "── ۲) تبدیل به DEX با d8 ──"
+echo "── ۲) تبدیل به DEX با d8 (کلاس‌های برنامه + کلاس‌های کتابخانه مایکت) ──"
 java -cp "$SDK_BT/lib/d8.jar" com.android.tools.r8.D8 \
   --lib "$PLATFORM" --release --output "$OUT/dex" \
+  "$MYKET_JAR" \
   $(find "$OUT/classes" -name "*.class")
 
-echo "── ۳) کامپایل و لینک منابع با aapt2 ──"
+echo "── ۳) کامپایل و لینک منابع با aapt2 (منابع برنامه + استایل کتابخانه مایکت) ──"
 find "$APP/src/main/res" -type f | while read -r f; do
   "$SDK_BT/aapt2" compile --dir "$APP/src/main/res" -o "$OUT/compiled-res" >/dev/null 2>&1 || true
   break
 done
 "$SDK_BT/aapt2" compile --dir "$APP/src/main/res" -o "$OUT/compiled-res.zip"
+"$SDK_BT/aapt2" compile --dir "$MYKET_AAR/res" -o "$OUT/compiled-res-lib.zip"
 "$SDK_BT/aapt2" link \
   -o "$OUT/base.apk" \
   -I "$PLATFORM" \
   --manifest "$APP/src/main/AndroidManifest.xml" \
   --auto-add-overlay \
-  "$OUT/compiled-res.zip"
+  "$OUT/compiled-res.zip" "$OUT/compiled-res-lib.zip"
 
 echo "── ۴) افزودن classes.dex و assets ──"
 cd "$OUT"

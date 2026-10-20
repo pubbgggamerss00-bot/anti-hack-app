@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
         webView.loadUrl("file:///android_asset/index.html");
         setContentView(webView);
 
-        /* اتصال به سرویس خرید درون‌برنامه‌ای مایکت — پس از اتصال، مالکیت اشتراک پرو بررسی می‌شود */
+        /* راه‌اندازی کتابخانه رسمی خرید درون‌برنامه‌ای مایکت — پس از اتصال، مالکیت اشتراک پرو بررسی می‌شود */
         myketBilling = new MyketBilling(this, new MyketBilling.Listener() {
             @Override
             public void onBillingEvent(String json) {
@@ -99,14 +99,8 @@ public class MainActivity extends Activity {
         myketBilling.bind();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // نتیجه صفحه خرید مایکت؛ اگر متعلق به فرایند خرید باشد پردازش و به JS ارسال می‌شود
-        if (myketBilling != null && myketBilling.handleActivityResult(requestCode, resultCode, data)) {
-            return;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+    /* نتیجه خرید مایکت از طریق ProxyBillingActivity داخل کتابخانه رسمی دریافت می‌شود؛
+       onActivityResult لازم نیست. */
 
     /* ───────────── نسخه نصب‌شده ───────────── */
 
