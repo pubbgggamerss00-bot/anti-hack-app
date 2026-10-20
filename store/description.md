@@ -11,7 +11,7 @@
 | مورد | مقدار |
 |---|---|
 | Package Name | `com.z.hack` |
-| نسخه (versionName) | 1.6.2 |
+| نسخه (versionName) | 1.6.3 |
 | versionCode | 11 |
 | شناسه محصول IAB (SKU) | `Pro` |
 | نام محصول در پنل | اشتراک پرو |

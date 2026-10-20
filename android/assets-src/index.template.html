@@ -349,7 +349,7 @@ const DEFAULT_STATE = { screenLock:'fingerprint', usbDebugging:true, playProtect
 
 const S = {
   stack: [{ name:'home' }],
-  isPro: false, theme:'dark', font:'md', deviceCode:'', viaMyket:false,
+  isPro: false, theme:'dark', font:'md', deviceCode:'',
   deviceState: JSON.parse(JSON.stringify(DEFAULT_STATE)),
   apps: [], lastScanScore: null,
 };
@@ -359,10 +359,6 @@ function loadState() {
     S.isPro = localStorage.getItem(LS.pro) === '1';
     S.theme = localStorage.getItem(LS.theme) || 'dark';
     S.font = localStorage.getItem(LS.font) || 'md';
-    try {
-      const dist = (window.AndroidBridge && window.AndroidBridge.distribution) ? JSON.parse(window.AndroidBridge.distribution() || '{}') : null;
-      S.viaMyket = !!(dist && dist.viaMyket);
-    } catch (e) { S.viaMyket = false; }
     let d = localStorage.getItem(LS.device);
     if (!d) {
       const chars = 'ABCDEF0123456789';
@@ -1076,7 +1072,7 @@ function submitRating() {
   }
   let res = {};
   try { res = JSON.parse(bridge.myketComment() || '{}'); } catch (e) { }
-  closeUpdateDialog();
+  closeDialog();
   if (res.ok) {
     setRatingState('done');
     toast('ممنون از حمایت شما! صفحه امتیازدهی مایکت باز شد');
@@ -1213,19 +1209,8 @@ function settingsHtml() {
     + FONTS.map(f => '<button role="radio" aria-checked="' + (S.font === f.key) + '" data-act="set-font" data-font="' + f.key + '" style="border-radius:1rem;padding:.75rem 0;font-size:.75rem;font-weight:800;transition:.15s;' + (S.font === f.key ? 'background:var(--primary);color:var(--primary-foreground);box-shadow:0 4px 6px -1px rgba(0,0,0,.1)' : 'background:var(--secondary);color:var(--muted-foreground)') + '">' + f.label + '</button>').join('')
     + '</div></section>'
 
-    + (S.viaMyket
-      ? '<section class="card pad"><h3 class="row t13 eb" style="gap:.5rem">' + ic('RefreshCw','xs') + 'بروزرسانی برنامه</h3>'
-        + '<p class="t11 lh6 muted" style="margin-top:.25rem">این نسخه از طریق فروشگاه مایکت نصب شده است؛ بروزرسانی‌های برنامه به‌صورت خودکار از طریق مایکت در دسترس شما قرار می‌گیرد و نیازی به بررسی دستی نیست.</p>'
-        + '<div class="row t11 b" style="margin-top:.75rem;gap:.625rem;border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem">' + ic('ShieldCheck','xs') + 'نسخه نصب‌شده: <b style="color:var(--primary)">' + faVer(DATA.version) + '</b></div></section>'
-      : '<section class="card pad"><h3 class="row t13 eb" style="gap:.5rem">' + ic('RefreshCw','xs') + 'بررسی بروزرسانی</h3>'
-        + '<p class="t11 lh6 muted" style="margin-top:.25rem">نسخه نصب‌شده برنامه با آخرین نسخه منتشرشده در گیت‌هاب مقایسه می‌شود. در صورت وجود نسخه جدید، دریافت و نصب آن مستقیماً از داخل برنامه انجام می‌گیرد.</p>'
-        + '<div class="row" style="margin-top:.75rem;gap:.625rem">'
-        + '<div class="grow t11 b" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem">نسخه نصب‌شده: <b style="color:var(--primary)">' + faVer(DATA.version) + '</b></div>'
-        + '<button class="btn" data-act="check-update" style="width:auto;height:2.75rem;padding:0 1rem;font-size:.75rem;border-radius:.75rem;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;gap:.375rem">' + ic('RefreshCw','xs') + '<span>بررسی بروزرسانی</span></button>'
-        + '</div></section>')
-
     + '<section class="card pad"><h3 class="row t13 eb" style="gap:.5rem">' + ic('Lock','xs') + 'حریم خصوصی و امنیت داده‌ها</h3>'
-    + '<p class="t11 lh6 muted" style="margin-top:.25rem">برنامه ضد هک کاملاً آفلاین است: هیچ داده شخصی، لیست تماس، پیام یا اطلاعات دستگاه شما به هیچ سروری ارسال نمی‌شود؛ هیچ تبلیغات یا ردیابی وجود ندارد و تمام پردازش‌ها داخل خود دستگاه انجام می‌گیرد. دسترسی اینترنت فقط برای تراکنش خرید درون‌برنامه‌ای مایکت و بررسی بروزرسانی (در نسخه نصب‌شده خارج از فروشگاه) استفاده می‌شود.</p></section>'
+    + '<p class="t11 lh6 muted" style="margin-top:.25rem">برنامه ضد هک کاملاً آفلاین است: هیچ داده شخصی، لیست تماس، پیام یا اطلاعات دستگاه شما به هیچ سروری ارسال نمی‌شود؛ هیچ تبلیغات یا ردیابی وجود ندارد و تمام پردازش‌ها داخل خود دستگاه انجام می‌گیرد. دسترسی اینترنت فقط برای تراکنش خرید درون‌برنامه‌ای مایکت استفاده می‌شود.</p></section>'
 
     + '<button class="card row pad" data-act="rate-open" style="width:100%;text-align:right;cursor:pointer"><span style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;flex-shrink:0;border-radius:1rem;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)">' + ic('Star','lg') + '</span>'
     + '<div class="grow"><p class="t12 eb">امتیاز دادن به برنامه در مایکت</p><p class="t11 lh5 muted" style="margin-top:.125rem">اگر از برنامه راضی هستید، با ثبت امتیاز و نوشتن تجربه خود در مایکت، به رشد برنامه و آگاهی کاربران دیگر کمک کنید.</p></div>'
@@ -1278,141 +1263,13 @@ function showDisclaimer() {
 }
 function acceptDisclaimer() { try { localStorage.setItem(LS.onboarded, '1'); } catch(e){} $('#disclaimer').classList.add('hidden'); }
 
-/* ═══════════ بررسی بروزرسانی (مقایسه نسخه با گیت‌هاب) ═══════════ */
-const GH_RELEASE_API = 'https://api.github.com/repos/pubbgggamerss00-bot/anti-hack-app/releases/latest';
-const APP_VERSION = String(DATA.version || '1.0.0').replace(/^v/i, '');
-const updateState = { busy: false, info: null };
-
-function cmpVer(a, b) {
-  const pa = String(a).replace(/^v/i, '').split('.').map(x => parseInt(x, 10) || 0);
-  const pb = String(b).replace(/^v/i, '').split('.').map(x => parseInt(x, 10) || 0);
-  for (let i = 0; i < Math.max(pa.length, pb.length); i++) { const d = (pa[i] || 0) - (pb[i] || 0); if (d) return d > 0 ? 1 : -1; }
-  return 0;
-}
-
-/* نمایش متن مارک‌داون تغییرات به‌صورت ایمن و خوانا */
-function mdLite(s) {
-  return esc(s)
-    .replace(/^#{1,6}\s+(.*)$/gm, '<b>$1</b>')
-    .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/^[-*]\s+/gm, '• ');
-}
-
-async function fetchLatestRelease() {
-  /* در اپ اندروید: بررسی بومی از طریق پل (بدون محدودیت CORS) */
-  if (window.AndroidBridge && window.AndroidBridge.checkUpdate) {
-    const raw = window.AndroidBridge.checkUpdate();
-    return JSON.parse(raw);
-  }
-  /* در نسخه وب: فراخوانی مستقیم API گیت‌هاب */
-  const r = await fetch(GH_RELEASE_API, { headers: { 'Accept': 'application/vnd.github+json' } });
-  if (!r.ok) {
-    if (r.status === 403) throw Object.assign(new Error('RATE_LIMIT'), { rateLimit: true });
-    throw new Error('HTTP ' + r.status);
-  }
-  const j = await r.json();
-  let apk = '';
-  (j.assets || []).forEach(a => { if (/\.apk$/i.test(a.name || '') && !apk) apk = a.browser_download_url; });
-  const latest = String(j.tag_name || '').replace(/^v/i, '');
-  return { ok: true, currentVersion: APP_VERSION, latestVersion: latest, title: j.name || '', changelog: j.body || '', downloadUrl: apk, publishedAt: j.published_at || '', isNewer: cmpVer(latest, APP_VERSION) > 0 };
-}
-
+/* ═══════════ دیالوگ عمومی (استفاده مشترک: امتیازدهی مایکت) ═══════════ */
 function openDialog(html, extraClass) {
   const el = $('#disclaimer');
-  el.innerHTML = '<div class="dialog ' + (extraClass || '') + '" role="dialog" aria-modal="true" aria-labelledby="upd-title" style="animation:fadeUp .3s ease both">' + html + '</div>';
+  el.innerHTML = '<div class="dialog ' + (extraClass || '') + '" role="dialog" aria-modal="true" aria-labelledby="dlg-title" style="animation:fadeUp .3s ease both">' + html + '</div>';
   el.classList.remove('hidden');
 }
-function closeUpdateDialog() { const el = $('#disclaimer'); el.classList.add('hidden'); el.innerHTML = ''; }
-
-async function checkUpdate() {
-  if (updateState.busy) return;
-  /* قوانین فروشگاه: در نسخه‌های نصب‌شده از مایکت، بروزرسانی فقط از طریق خود فروشگاه */
-  if (S.viaMyket) { toast('بروزرسانی این نسخه به‌صورت خودکار از طریق فروشگاه مایکت انجام می‌شود'); return; }
-  updateState.busy = true;
-  const btn = $('[data-act=check-update]');
-  if (btn) { btn.disabled = true; btn.style.opacity = '.75'; btn.innerHTML = ic('Loader2', 'xs spin') + '<span>در حال بررسی...</span>'; }
-  try {
-    const info = await fetchLatestRelease();
-    if (!info || !info.ok || !info.latestVersion) throw new Error(info && info.error ? info.error : 'bad response');
-    updateState.info = info;
-    showUpdateResult(info);
-  } catch (e) {
-    toast(e && e.rateLimit ? 'تعداد درخواست‌های بررسی بیش از حد مجاز است؛ چند دقیقه بعد دوباره تلاش کنید' : 'بررسی بروزرسانی ناموفق بود؛ اتصال اینترنت دستگاه را بررسی کنید', 'err');
-  }
-  updateState.busy = false;
-  if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = ic('RefreshCw', 'xs') + '<span>بررسی بروزرسانی</span>'; }
-}
-
-function showUpdateResult(info) {
-  const hasNew = typeof info.isNewer === 'boolean' ? info.isNewer : cmpVer(info.latestVersion, APP_VERSION) > 0;
-  if (!hasNew) {
-    /* برنامه بروز است */
-    openDialog(
-      '<div class="row" style="gap:.75rem;margin-bottom:1rem">'
-      + '<div style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;border-radius:1rem;flex-shrink:0;background:color-mix(in srgb,var(--emerald) 15%,transparent);color:var(--emerald-dark)">' + ic('ShieldCheck', 'xl') + '</div>'
-      + '<div><h2 id="upd-title" class="t14 eb" style="color:var(--emerald-dark)">برنامه بروز است ✓</h2><p class="t11 muted">شما جدیدترین نسخه منتشرشده را در اختیار دارید.</p></div></div>'
-      + '<div class="t11" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.875rem">'
-      + '<div class="row" style="justify-content:space-between"><span class="muted">نسخه نصب‌شده روی دستگاه شما</span><b>' + esc(APP_VERSION) + '</b></div>'
-      + '<div class="row" style="justify-content:space-between;margin-top:.375rem"><span class="muted">آخرین نسخه منتشرشده در گیت‌هاب</span><b>' + esc(info.latestVersion) + '</b></div>'
-      + (info.title ? '<div class="row" style="justify-content:space-between;margin-top:.375rem"><span class="muted">نام انتشار</span><b>' + esc(info.title) + '</b></div>' : '')
-      + '</div>'
-      + '<button class="btn" data-act="update-close" style="margin-top:1rem">متوجه شدم</button>'
-    );
-    return;
-  }
-  /* بروزرسانی جدید موجود است — نمایش نسخه و شرح تغییرات */
-  openDialog(
-    '<div class="row" style="gap:.75rem;margin-bottom:.875rem">'
-    + '<div style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;border-radius:1rem;flex-shrink:0;background:color-mix(in srgb,var(--primary) 15%,transparent);color:var(--primary)">' + ic('RefreshCw', 'xl') + '</div>'
-    + '<div><h2 id="upd-title" class="t14 eb" style="color:var(--primary)">بروزرسانی جدید موجود است!</h2><p class="t11 muted">نسخه جدید از گیت‌هاب دریافت و نصب می‌شود</p></div></div>'
-    + '<div class="row" style="gap:.625rem;margin-bottom:.875rem">'
-    + '<div style="flex:1;border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.625rem .75rem;text-align:center"><p class="t105 muted">نسخه نصب‌شده</p><p class="t12 b" style="text-decoration:line-through;opacity:.7">' + faVer(APP_VERSION) + '</p></div>'
-    + '<span style="color:var(--muted-foreground);flex-shrink:0">' + ic('ChevronLeft', 'sm') + '</span>'
-    + '<div style="flex:1;border-radius:1rem;border:1.5px solid color-mix(in srgb,var(--primary) 45%,transparent);background:color-mix(in srgb,var(--primary) 8%,transparent);padding:.625rem .75rem;text-align:center"><p class="t105 muted">نسخه جدید</p><p class="t125 eb" style="color:var(--primary)">' + faVer(info.latestVersion) + '</p></div>'
-    + '</div>'
-    + (info.changelog ? '<div style="margin-bottom:.875rem"><p class="t11 eb" style="margin-bottom:.375rem">اتفاقی که در این نسخه افتاده:</p><div style="max-height:10rem;overflow-y:auto;white-space:pre-line;border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem;font-size:.6875rem;line-height:1.6rem;color:color-mix(in srgb,var(--foreground) 85%,transparent)">' + mdLite(info.changelog) + '</div></div>' : '')
-    + (info.publishedAt ? '<p class="t105 muted" style="margin-bottom:.875rem">تاریخ انتشار: ' + faDate(info.publishedAt) + '</p>' : '')
-    + '<button class="btn" data-act="update-download" style="padding:1.15rem;font-size:.875rem">' + ic('Download', 'sm') + 'دانلود و نصب بروزرسانی</button>'
-    + '<button class="btn sec" data-act="update-close" style="margin-top:.5rem;border:1px solid var(--border);background:transparent;color:var(--muted-foreground)">فعلاً نه</button>',
-    'gold-glow'
-  );
-}
-
-function startUpdateDownload() {
-  const info = updateState.info;
-  if (!info || !info.downloadUrl) { toast('لینک دانلود نسخه جدید یافت نشد', 'err'); return; }
-  if (window.AndroidBridge && window.AndroidBridge.downloadAndInstall) {
-    /* اپ اندروید: دانلود بومی با نوار پیشرفت و بازشدن خودکار صفحه نصب */
-    openDialog(
-      '<div class="row" style="gap:.75rem;margin-bottom:1rem">'
-      + '<div style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;border-radius:1rem;flex-shrink:0;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)">' + ic('Download', 'xl') + '</div>'
-      + '<div><h2 class="t14 eb">در حال دریافت بروزرسانی</h2><p class="t11 muted" id="upd-status">دانلود نسخه ' + faVer(info.latestVersion) + ' از گیت‌هاب...</p></div></div>'
-      + '<div style="border-radius:99px;background:color-mix(in srgb,var(--muted) 70%,transparent);height:.625rem;overflow:hidden"><div id="upd-bar" style="height:100%;width:0%;border-radius:99px;background:var(--primary);transition:width .25s ease"></div></div>'
-      + '<p class="center t12 b" id="upd-pct" style="margin-top:.625rem;color:var(--primary)">۰٪</p>'
-      + '<p class="t105 muted center" style="margin-top:.25rem">پس از اتمام دانلود، صفحه نصب به‌صورت خودکار باز می‌شود.</p>'
-    );
-    window.AndroidBridge.downloadAndInstall(info.downloadUrl, info.latestVersion);
-  } else {
-    /* نسخه وب: انتقال به فایل APK در گیت‌هاب */
-    toast('در حال انتقال به صفحه دریافت نسخه جدید...');
-    window.open(info.downloadUrl || 'https://github.com/pubbgggamerss00-bot/anti-hack-app/releases/latest', '_blank');
-  }
-}
-
-/* بازفراخوانی‌های بومی از MainActivity (پیشرفت و نتیجه دانلود) */
-window.__updateProgress = function (pct) {
-  const p = Math.max(0, Math.min(100, Number(pct) || 0));
-  const bar = $('#upd-bar'), pctEl = $('#upd-pct'), st = $('#upd-status');
-  if (bar) bar.style.width = p + '%';
-  if (pctEl) pctEl.textContent = fa(p) + '٪';
-  if (st && p >= 100) st.textContent = 'دانلود کامل شد؛ در حال بازکردن صفحه نصب...';
-};
-window.__updateResult = function (ok, msg) {
-  closeUpdateDialog();
-  if (ok) toast(msg || 'دانلود کامل شد؛ در حال بازکردن صفحه نصب...');
-  else toast(msg || 'خطا در دریافت بروزرسانی', 'err');
-};
+function closeDialog() { const el = $('#disclaimer'); el.classList.add('hidden'); el.innerHTML = ''; }
 
 /* ═══════════ رویدادها (Event Delegation) ═══════════ */
 document.addEventListener('click', (e) => {
@@ -1426,17 +1283,14 @@ document.addEventListener('click', (e) => {
     case 'open-tool': push({ name: 'tool', route: t.getAttribute('data-route') }); break;
     case 'open-lesson': push({ name: 'lesson-detail', id: Number(t.getAttribute('data-id')) }); break;
     case 'accept-disclaimer': acceptDisclaimer(); break;
-    case 'check-update': checkUpdate(); break;
-    case 'update-close': closeUpdateDialog(); break;
-    case 'update-download': startUpdateDownload(); break;
     case 'set-theme': setTheme(t.getAttribute('data-theme')); render(); break;
     case 'set-font': setFont(t.getAttribute('data-font')); render(); break;
     case 'deactivate-pro': setPro(false); saveState(); render(); break;
     case 'myket-buy': startMyketPurchase(); break;
     case 'open-myket': openMyketSite(); break;
     case 'rate-accept': submitRating(); break;
-    case 'rate-later': setRatingState('later'); try { localStorage.setItem(LS.rateAt, String(Date.now() + 3 * 86400000)); } catch (e) { } closeUpdateDialog(); break;
-    case 'rate-never': setRatingState('never'); closeUpdateDialog(); break;
+    case 'rate-later': setRatingState('later'); try { localStorage.setItem(LS.rateAt, String(Date.now() + 3 * 86400000)); } catch (e) { } closeDialog(); break;
+    case 'rate-never': setRatingState('never'); closeDialog(); break;
     case 'rate-open': showRatingDialog(); break;
     case 'shield-scan': runShieldScan(); break;
     case 'fix-issue': { const r = applyFix(t.getAttribute('data-fix')); if (r.ok) { toast(r.message); if (shield.result) { shield.result.issues = shield.result.issues.filter(i => i.id !== t.getAttribute('data-id')); } renderScreen(); } else toast(r.error || 'خطا در رفع مشکل', 'err'); break; }

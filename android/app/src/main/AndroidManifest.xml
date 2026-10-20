@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.z.hack"
-    android:versionCode="11"
-    android:versionName="1.6.2">
+    android:versionCode="12"
+    android:versionName="1.6.3">
 
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34" />
 
-    <!-- بررسی بروزرسانی و دریافت نسخه جدید از گیت‌هاب -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- نصب نسخه جدید از داخل برنامه (نصاب سیستم اندروید) -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- خرید درون‌برنامه‌ای مایکت (ارتقا به نسخه پرو) -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- هر دو دسترسی لازم است: سرویس خرید مایکت دسترسی com.android.vending.BILLING را هم بررسی می‌کند؛
          نبود آن باعث SecurityException در getBuyIntent می‌شود -->
     <uses-permission android:name="ir.mservices.market.BILLING" />
@@ -46,13 +43,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- اشتراک‌گذاری امن فایل APK دانلودشده با نصاب سیستم -->
-        <provider
-            android:name=".ApkProvider"
-            android:authorities="com.z.hack.update"
-            android:exported="false"
-            android:grantUriPermissions="true" />
 
         <!-- ─── اجزای کتابخانه رسمی خرید مایکت (myket-billing-client) ─── -->
         <!-- آدرس سرویس و پکیج مایکت (معادل manifestPlaceholders مستندات رسمی) -->
