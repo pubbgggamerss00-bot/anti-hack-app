@@ -10,7 +10,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"                           # android/
 APP="$ROOT/app"
 OUT="$ROOT/build"
 KEYSTORE="$ROOT/scripts/release.keystore"
-VERSION="${VERSION:-1.6.0}"
+VERSION="${VERSION:-1.6.1}"
 MYKET_AAR="$ROOT/libs/myket-aar"
 MYKET_JAR="$ROOT/libs/myket-aar/classes.jar"
 

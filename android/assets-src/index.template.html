@@ -298,7 +298,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:1.25rem;he
   <div class="splash-tag" aria-hidden="true"><span class="t1">۱۰۰٪ آفلاین</span><span class="t2">حفاظت نهایی</span></div>
   <div class="splash-bar">
     <div class="track"><div class="fill" id="splash-fill"></div></div>
-    <div class="splash-meta"><span>نسخه ۱.۵.۰</span><span class="pct" id="splash-pct">۰٪</span></div>
+    <div class="splash-meta"><span id="splash-ver">نسخه —</span><span class="pct" id="splash-pct">۰٪</span></div>
   </div>
   <p class="splash-status" id="splash-status">راه‌اندازی هسته امنیتی…</p>
 </div>
@@ -326,7 +326,7 @@ const ICONS = __ICONS__;
 const DISCLAIMER = __DISCLAIMER__;
 
 /* ═══════════ ابزارهای پایه ═══════════ */
-const LS = { pro:'ainthack-pro', theme:'ainthack-theme', font:'ainthack-font', device:'ainthack-device-code', onboarded:'ainthack-onboarded', checklist:'ainthack-checklist', state:'ainthack-devicestate', apps:'ainthack-simapps', score:'ainthack-lastscan' };
+const LS = { pro:'ainthack-pro', theme:'ainthack-theme', font:'ainthack-font', device:'ainthack-device-code', onboarded:'ainthack-onboarded', checklist:'ainthack-checklist', state:'ainthack-devicestate', apps:'ainthack-simapps', score:'ainthack-lastscan', rate:'ainthack-rate', rateAt:'ainthack-rate-later', launches:'ainthack-launches' };
 const $ = (s, r) => (r || document).querySelector(s);
 const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const fa = n => Number(n).toLocaleString('fa-IR');
@@ -1025,6 +1025,64 @@ function openMyketSite() {
 
 function myketBridge() { return (window.AndroidBridge && window.AndroidBridge.myketBuy) ? window.AndroidBridge : null; }
 
+/* ═══════════ دیالوگ امتیازدهی در مایکت (myket://comment) ═══════════
+   طبق مستندات رسمی مایکت: ابتدا دیالوگ تأیید نمایش داده می‌شود و در صورت
+   تأیید کاربر، اینتنت myket://comment?id=PACKAGE باز می‌شود */
+
+function ratingState() { try { return localStorage.getItem(LS.rate) || ''; } catch (e) { return ''; } }
+function setRatingState(v) { try { localStorage.setItem(LS.rate, v); } catch (e) { } }
+function launchCount() { try { return Number(localStorage.getItem(LS.launches) || '0'); } catch (e) { return 0; } }
+function bumpLaunchCount() { try { localStorage.setItem(LS.launches, String(launchCount() + 1)); } catch (e) { } }
+
+function showRatingDialog() {
+  if (!$('#disclaimer').classList.contains('hidden')) return false; /* دیالوگ دیگری باز است */
+  openDialog(
+    '<div class="row" style="gap:.75rem;margin-bottom:1rem">'
+    + '<div style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;border-radius:1rem;flex-shrink:0;background:color-mix(in srgb,var(--primary) 15%,transparent);color:var(--primary);box-shadow:0 0 18px -4px color-mix(in srgb,var(--primary) 60%,transparent)">' + ic('Star', 'xl') + '</div>'
+    + '<div><h2 id="rate-title" class="t14 eb neontext">نظر شما برای ما ارزشمند است</h2><p class="t11 muted">حمایت شما انگیزه توسعه امکانات جدید است</p></div></div>'
+    + '<p class="t12" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:1rem;line-height:1.9rem">اگر از برنامه <b>ضد هک</b> راضی هستید، لطفاً در فروشگاه مایکت به آن امتیاز دهید و تجربه خود را برای سایر کاربران بنویسید؛ نظر شما به رشد برنامه و آگاهی کاربران دیگر کمک می‌کند.</p>'
+    + '<button class="btn" data-act="rate-accept" style="margin-top:1rem;padding:1.15rem">' + ic('Star', 'sm') + 'امتیاز دادن در مایکت</button>'
+    + '<button class="btn sec" data-act="rate-later" style="margin-top:.5rem;border:1px solid var(--border);background:transparent;color:var(--muted-foreground)">بعداً یادآوری کن</button>'
+    + '<button class="btn sec" data-act="rate-never" style="margin-top:.5rem;border:1px solid transparent;background:transparent;color:var(--muted-foreground);font-size:.75rem">خیر، ممنون</button>'
+  );
+  return true;
+}
+
+/* نمایش خودکار: پس از خرید موفق، یا از اجرای سوم برنامه به بعد (هر ۳ روز یک‌بار) */
+function maybePromptRating(reason) {
+  const st = ratingState();
+  if (st === 'done' || st === 'never') return;
+  if (!$('#disclaimer').classList.contains('hidden')) return;
+  if (reason === 'purchase') { showRatingDialog(); return; }
+  if (launchCount() < 3) return;
+  if (st === 'later') {
+    let at = 0;
+    try { at = Number(localStorage.getItem(LS.rateAt) || '0'); } catch (e) { }
+    if (!at || Date.now() < at) return;
+  }
+  showRatingDialog();
+}
+
+/* تأیید کاربر → بازکردن صفحه امتیاز و نظرات در مایکت با myket://comment?id=... */
+function submitRating() {
+  const bridge = window.AndroidBridge;
+  if (!(bridge && bridge.myketComment)) {
+    toast('ثبت نظر در مایکت فقط در نسخه اندروید برنامه فعال است', 'err');
+    return;
+  }
+  let res = {};
+  try { res = JSON.parse(bridge.myketComment() || '{}'); } catch (e) { }
+  closeUpdateDialog();
+  if (res.ok) {
+    setRatingState('done');
+    toast('ممنون از حمایت شما! صفحه امتیازدهی مایکت باز شد');
+  } else if (res.marketInstalled === false) {
+    toast('مایکت روی دستگاه شما نصب نیست؛ پس از نصب مایکت می‌توانید به ما امتیاز دهید', 'err');
+  } else {
+    toast('بازکردن صفحه امتیازدهی ناموفق بود؛ مایکت را بروزرسانی کنید و دوباره تلاش کنید', 'err');
+  }
+}
+
 /* فعال‌سازی پرو از طریق خرید موفق یا مالکیت تأییدشده */
 function unlockProFromMyket(msg) {
   proState.buying = false;
@@ -1074,7 +1132,12 @@ async function startMyketPurchase() {
 /* نتیجه خرید از صفحه مایکت (پس از onActivityResult) */
 window.__myketPurchaseResult = function (ok, info) {
   info = info || {};
-  if (ok || info.owned) { unlockProFromMyket(info.code === 7 ? 'اشتراک پرو شما شناسایی شد — فعال گردید' : undefined); return; }
+  if (ok || info.owned) {
+    unlockProFromMyket(info.code === 7 ? 'اشتراک پرو شما شناسایی شد — فعال گردید' : undefined);
+    /* لحظه رضایت کاربر: پس از خرید موفق، دیالوگ امتیازدهی مایکت */
+    if (ok) setTimeout(function () { maybePromptRating('purchase'); }, 3500);
+    return;
+  }
   proState.buying = false;
   if (cur().name === 'pro') renderScreen();
   if (info.canceled || info.code === 1) toast('خرید لغو شد', 'err');
@@ -1152,6 +1215,10 @@ function settingsHtml() {
     + '<div class="grow t11 b" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem">نسخه نصب‌شده: <b style="color:var(--primary)">' + faVer(DATA.version) + '</b></div>'
     + '<button class="btn" data-act="check-update" style="width:auto;height:2.75rem;padding:0 1rem;font-size:.75rem;border-radius:.75rem;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;gap:.375rem">' + ic('RefreshCw','xs') + '<span>بررسی بروزرسانی</span></button>'
     + '</div></section>'
+
+    + '<button class="card row pad" data-act="rate-open" style="width:100%;text-align:right;cursor:pointer"><span style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;flex-shrink:0;border-radius:1rem;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)">' + ic('Star','lg') + '</span>'
+    + '<div class="grow"><p class="t12 eb">امتیاز دادن به برنامه در مایکت</p><p class="t11 lh5 muted" style="margin-top:.125rem">اگر از برنامه راضی هستید، با ثبت امتیاز و نوشتن تجربه خود در مایکت، به رشد برنامه و آگاهی کاربران دیگر کمک کنید.</p></div>'
+    + '<span style="flex-shrink:0;color:var(--muted-foreground)">' + ic('ChevronLeft','sm') + '</span></button>'
 
     + '<section class="card pad"><h3 class="row t13 eb" style="gap:.5rem">' + ic('Info','xs') + 'درباره برنامه</h3>'
     + '<p class="t11 lh7 muted" style="margin-top:.5rem">هدف این برنامه افزایش سطح آگاهی سایبری عموم مردم، تامین امنیت شبکه‌های اجتماعی و حفظ حریم خصوصی است. تمامی محتواها و کدهای موجود به صورت کاملاً مستقل و ۱۰۰٪ آفلاین توسعه یافته است. محیط امن کامپایل‌شده، مرجع آفلاین حریم خصوصی و امنیت.</p>'
@@ -1354,6 +1421,10 @@ document.addEventListener('click', (e) => {
     case 'deactivate-pro': setPro(false); saveState(); render(); break;
     case 'myket-buy': startMyketPurchase(); break;
     case 'open-myket': openMyketSite(); break;
+    case 'rate-accept': submitRating(); break;
+    case 'rate-later': setRatingState('later'); try { localStorage.setItem(LS.rateAt, String(Date.now() + 3 * 86400000)); } catch (e) { } closeUpdateDialog(); break;
+    case 'rate-never': setRatingState('never'); closeUpdateDialog(); break;
+    case 'rate-open': showRatingDialog(); break;
     case 'shield-scan': runShieldScan(); break;
     case 'fix-issue': { const r = applyFix(t.getAttribute('data-fix')); if (r.ok) { toast(r.message); if (shield.result) { shield.result.issues = shield.result.issues.filter(i => i.id !== t.getAttribute('data-id')); } renderScreen(); } else toast(r.error || 'خطا در رفع مشکل', 'err'); break; }
     case 'tool-scan': {
@@ -1405,6 +1476,8 @@ document.addEventListener('input', (e) => {
 
 /* ═══════════ راه‌اندازی ═══════════ */
 loadState();
+bumpLaunchCount();
+try { const sv = $('#splash-ver'); if (sv) sv.textContent = 'نسخه ' + faVer(DATA.version); } catch (e) { }
 render();
 
 /* ═══════════ انیمیشن لودینگ نئونی ورود ═══════════ */
@@ -1461,6 +1534,7 @@ render();
     let onboarded = false;
     try { onboarded = !!localStorage.getItem(LS.onboarded); } catch(e){}
     if (!onboarded) setTimeout(showDisclaimer, 400);
+    else setTimeout(function () { maybePromptRating('launch'); }, 1500);
   }
 
   requestAnimationFrame(step);

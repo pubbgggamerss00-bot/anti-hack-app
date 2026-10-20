@@ -271,6 +271,29 @@ public class MainActivity extends Activity {
             } catch (Exception ignored) { }
             return res.toString();
         }
+
+        /**
+         * بازکردن صفحه ثبت نظر و امتیازدهی برنامه در مایکت — طبق مستندات رسمی:
+         * myket://comment?id=PACKAGE با Intent.ACTION_VIEW
+         * (پس از نمایش دیالوگ تأیید در سمت جاوااسکریپت فراخوانی می‌شود)
+         */
+        @JavascriptInterface
+        public String myketComment() {
+            JSONObject res = new JSONObject();
+            try {
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("myket://comment?id=" + getPackageName()));
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+                res.put("ok", true);
+            } catch (Exception e) {
+                /* مایکت نصب نیست یا صفحه نظر باز نشد — جاوااسکریپت پیام مناسب نمایش می‌دهد */
+                try {
+                    res.put("ok", false);
+                    res.put("marketInstalled", myketBilling != null && myketBilling.isMarketInstalled());
+                } catch (Exception ignored) { }
+            }
+            return res.toString();
+        }
     }
 
     /* ───────────── دانلود و نصب ───────────── */
