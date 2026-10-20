@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.z.hack"
-    android:versionCode="7"
-    android:versionName="1.5.1">
+    android:versionCode="8"
+    android:versionName="1.5.2">
 
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34" />
 
@@ -11,7 +11,10 @@
     <!-- نصب نسخه جدید از داخل برنامه (نصاب سیستم اندروید) -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- خرید درون‌برنامه‌ای مایکت (ارتقا به نسخه پرو) -->
+    <!-- هر دو دسترسی لازم است: سرویس خرید مایکت دسترسی com.android.vending.BILLING را هم بررسی می‌کند؛
+         نبود آن باعث SecurityException در getBuyIntent می‌شود -->
     <uses-permission android:name="ir.mservices.market.BILLING" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <!--
       ضروری برای اندروید ۱۱ به بالا (Package Visibility):

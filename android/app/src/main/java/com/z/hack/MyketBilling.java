@@ -259,6 +259,17 @@ public class MyketBilling {
             });
             res.put("launched", true);
             return res.toString();
+        } catch (SecurityException se) {
+            /* مایکت شروع خرید را رد کرد؛ معمولاً یعنی دسترسی صورت‌حساب کامل نیست
+               یا برنامه/محصول در پنل مایکت با همین پکیج و امضا ثبت/فعال نشده است */
+            try {
+                res.put("ok", false);
+                res.put("error", "security");
+                res.put("detail", "SecurityException");
+                String m = se.getMessage();
+                if (m != null) res.put("detailMsg", m.length() > 300 ? m.substring(0, 300) : m);
+            } catch (Exception ignored) { }
+            return res.toString();
         } catch (RemoteException e) {
             try { res.put("ok", false); res.put("error", "remote"); } catch (Exception ignored) { }
             return res.toString();
@@ -267,6 +278,8 @@ public class MyketBilling {
                 res.put("ok", false);
                 res.put("error", "exception");
                 res.put("detail", e.getClass().getSimpleName());
+                String m = e.getMessage();
+                if (m != null) res.put("detailMsg", m.length() > 300 ? m.substring(0, 300) : m);
             } catch (Exception ignored) { }
             return res.toString();
         }

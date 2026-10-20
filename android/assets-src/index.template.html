@@ -1009,6 +1009,12 @@ function billingCodeMsg(code) {
   }
 }
 
+/* راهنمای خطای امنیتی مایکت (رد شدن درخواست خرید) */
+function securityGuidanceMsg(detailMsg) {
+  return 'مایکت شروع خرید را تأیید نکرد. این موارد را بررسی کنید: (۱) مایکت بروز باشد و وارد حساب کاربری شده باشید (۲) برنامه با پکیج com.z.hack و همان امضا در پنل مایکت منتشر شده باشد (۳) محصول «اشتراک پرو» با شناسه Pro در پنل فعال باشد.'
+    + (detailMsg ? ' جزئیات فنی: ' + detailMsg : '');
+}
+
 /* بازکردن صفحه دریافت مایکت در مرورگر */
 function openMyketSite() {
   try {
@@ -1053,6 +1059,7 @@ async function startMyketPurchase() {
     }
     else if (res.error === 'unsupported') toast('فروشگاه مایکت نصب‌شده از خرید درون‌برنامه‌ای پشتیبانی نمی‌کند', 'err');
     else if (res.error === 'unavailable') toast('خرید درون‌برنامه‌ای در این نسخه در دسترس نیست', 'err');
+    else if (res.error === 'security' || res.detail === 'SecurityException') toast(securityGuidanceMsg(res.detailMsg), 'err');
     else {
       const m = billingCodeMsg(res.code);
       toast(m || ('شروع خرید ناموفق بود' + (res.detail ? ' (' + res.detail + ')' : '') + '؛ دوباره تلاش کنید'), 'err');
@@ -1074,6 +1081,7 @@ window.__myketPurchaseResult = function (ok, info) {
   else if (info.error === 'invalid_signature') toast('تأیید امضای تراکنش ناموفق بود؛ خرید معتبر نیست', 'err');
   else if (info.error === 'wrong_product') toast('محصول خریداری‌شده با اشتراک پرو مطابقت ندارد', 'err');
   else if (info.error === 'launch_failed') toast('بازکردن صفحه خرید مایکت ناموفق بود؛ مطمئن شوید مایکت بروز است و دوباره تلاش کنید', 'err');
+  else if (info.error === 'security') toast(securityGuidanceMsg(info.detailMsg), 'err');
   else {
     const m = billingCodeMsg(info.code);
     toast(m || 'خرید ناموفق بود؛ دوباره تلاش کنید', 'err');
