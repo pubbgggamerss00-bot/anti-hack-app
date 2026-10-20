@@ -1,0 +1,32 @@
+# ─── وابستگی‌ها و خروجی‌های build ───
+node_modules/
+.next/
+out/
+build/
+
+# ─── فایل‌های محیطی و لاگ ───
+dev.log
+*.log
+.DS_Store
+
+# ─── پوشه‌های sandbox که جزو پروژه نیستند ───
+upload/
+download/
+tests/
+tool-results/
+examples/
+skills/
+mini-services/
+worklog.md
+apk-analysis/
+
+# ─── خروجی موقت build اندروید (APK نهایی در پوشه apk/ نگهداری می‌شود) ───
+android/build/
+
+# ─── keystore (نباید عمومی شود) ───
+android/scripts/release.keystore
+
+# ─── محیط و اسکریپت‌های sandbox ───
+.env
+.zscripts/
+Caddyfile

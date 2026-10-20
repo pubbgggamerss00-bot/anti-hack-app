@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ۲۰ درس آموزشی ضد هک ───
+model Lesson {
+  id           Int     @id
+  title        String
+  subtitle     String
+  icon         String
+  intro        String
+  sectionTitle String
+  text         String
+  alert        String
+  note         String
+  mistake      String
+  action       String
+  summary      String
+  isFree       Boolean @default(false)
+  readMinutes  Int     @default(4)
+}
+
+// ─── ۱۳ ابزار امنیتی ───
+model Tool {
+  id          Int     @id
+  title       String
+  subtitle    String
+  description String
+  icon        String
+  route       String  @unique
+  isPro       Boolean @default(true)
+}
+
+// ─── ۱۳ میانبر طلایی تنظیمات اندروید ───
+model Shortcut {
+  id    Int    @id
+  title String
+  desc  String
+  icon  String
+  steps String // newline-separated
+}
+
+// ─── چک‌لیست ۱۵ موردی شناسنامه پدافند ───
+model ChecklistItem {
+  id    Int    @id
+  title String
+  desc  String
+  icon  String
+}
+
+// ─── پایگاه شبیه‌سازی‌شده برنامه‌های نصب‌شده روی دستگاه اندروید ───
+model SimApp {
+  id              Int      @id @default(autoincrement())
+  packageName     String   @unique
+  name            String
+  installDate     DateTime
+  hasLauncherIcon Boolean  @default(true)
+  isSystem        Boolean  @default(false)
+  permissions     String   @default("") // comma-separated: sms,gps,camera,contacts,mic,storage
+  isDeviceAdmin   Boolean  @default(false)
+  isAccessibility Boolean  @default(false)
+  isOverlay       Boolean  @default(false)
+  isUsageAccess   Boolean  @default(false)
+  isSuspicious    Boolean  @default(false)
+  signatureOk     Boolean  @default(true)
+  isGooglePackage Boolean  @default(false)
+  sizeMb          Float    @default(20)
+}
+
+// ─── وضعیت دستگاه شبیه‌سازی‌شده (قابل اصلاح توسط کاربر) ───
+model DeviceState {
+  id             Int     @id @default(1)
+  screenLock     String  @default("fingerprint") // none | pattern | pin | fingerprint
+  usbDebugging   Boolean @default(true)
+  playProtect    Boolean @default(true)
+  unknownSources Boolean @default(true)
+  securityPatch  String  @default("2025-05-01")
+  findMyDevice   Boolean @default(false)
+  simPin         Boolean @default(false)
+  autoUpdates    Boolean @default(true)
+  notifUnlocked  Boolean @default(true) // نوتیفیکیشن بدون محدودیت
+  proActive      Boolean @default(false)
+  proMethod      String? // myket | token
+  proSince       DateTime?
+  lastScanScore  Int?
+}
+
+// ─── سابقه اسکن‌ها و فعالسازی‌ها ───
+model ScanRecord {
+  id        Int      @id @default(autoincrement())
+  score     Int
+  issues    String   @default("[]") // JSON
+  createdAt DateTime @default(now())
+}
+
+model Activation {
+  id         Int      @id @default(autoincrement())
+  deviceCode String
+  token      String
+  method     String
+  createdAt  DateTime @default(now())
+}

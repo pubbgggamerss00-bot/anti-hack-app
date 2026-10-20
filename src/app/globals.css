@@ -1,0 +1,193 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Vazirmatn", var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-navy: var(--navy);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ── تم تیره سرمه‌ای/طلایی (تم اصلی اپ ضد هک) ── */
+:root {
+  --radius: 1rem;
+  --background: oklch(0.97 0.005 80);
+  --foreground: oklch(0.24 0.03 250);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.03 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.03 250);
+  --primary: oklch(0.72 0.15 75);
+  --primary-foreground: oklch(0.2 0.03 250);
+  --secondary: oklch(0.93 0.01 80);
+  --secondary-foreground: oklch(0.3 0.03 250);
+  --muted: oklch(0.94 0.008 80);
+  --muted-foreground: oklch(0.5 0.02 250);
+  --accent: oklch(0.93 0.04 80);
+  --accent-foreground: oklch(0.3 0.04 250);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.88 0.01 80);
+  --input: oklch(0.88 0.01 80);
+  --ring: oklch(0.72 0.15 75);
+  --chart-1: oklch(0.72 0.15 75);
+  --chart-2: oklch(0.35 0.05 250);
+  --chart-3: oklch(0.68 0.16 160);
+  --chart-4: oklch(0.6 0.2 25);
+  --chart-5: oklch(0.55 0.1 300);
+  --sidebar: oklch(0.98 0 0);
+  --sidebar-foreground: oklch(0.24 0.03 250);
+  --sidebar-primary: oklch(0.72 0.15 75);
+  --sidebar-primary-foreground: oklch(0.2 0.03 250);
+  --sidebar-accent: oklch(0.93 0.01 80);
+  --sidebar-accent-foreground: oklch(0.3 0.03 250);
+  --sidebar-border: oklch(0.88 0.01 80);
+  --sidebar-ring: oklch(0.72 0.15 75);
+  --gold: oklch(0.72 0.15 75);
+  --gold-soft: oklch(0.93 0.06 85);
+  --navy: oklch(0.27 0.04 255);
+}
+
+.dark {
+  --background: oklch(0.19 0.025 255);
+  --foreground: oklch(0.93 0.01 85);
+  --card: oklch(0.235 0.03 255);
+  --card-foreground: oklch(0.93 0.01 85);
+  --popover: oklch(0.22 0.03 255);
+  --popover-foreground: oklch(0.93 0.01 85);
+  --primary: oklch(0.78 0.15 80);
+  --primary-foreground: oklch(0.19 0.03 255);
+  --secondary: oklch(0.28 0.035 255);
+  --secondary-foreground: oklch(0.93 0.01 85);
+  --muted: oklch(0.27 0.03 255);
+  --muted-foreground: oklch(0.62 0.02 255);
+  --accent: oklch(0.3 0.04 80);
+  --accent-foreground: oklch(0.93 0.01 85);
+  --destructive: oklch(0.6 0.22 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.32 0.03 255);
+  --input: oklch(0.33 0.03 255);
+  --ring: oklch(0.78 0.15 80);
+  --chart-1: oklch(0.78 0.15 80);
+  --chart-2: oklch(0.6 0.03 255);
+  --chart-3: oklch(0.7 0.16 160);
+  --chart-4: oklch(0.65 0.2 25);
+  --chart-5: oklch(0.6 0.1 300);
+  --sidebar: oklch(0.22 0.03 255);
+  --sidebar-foreground: oklch(0.93 0.01 85);
+  --sidebar-primary: oklch(0.78 0.15 80);
+  --sidebar-primary-foreground: oklch(0.19 0.03 255);
+  --sidebar-accent: oklch(0.28 0.035 255);
+  --sidebar-accent-foreground: oklch(0.93 0.01 85);
+  --sidebar-border: oklch(0.32 0.03 255);
+  --sidebar-ring: oklch(0.78 0.15 80);
+  --gold: oklch(0.78 0.15 80);
+  --gold-soft: oklch(0.32 0.05 80);
+  --navy: oklch(0.16 0.02 255);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    font-family: "Vazirmatn", system-ui, sans-serif;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Vazirmatn", system-ui, sans-serif;
+  }
+}
+
+/* اسکرول‌بار سفارشی */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklch, var(--gold) 45%, transparent);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklch, var(--gold) 70%, transparent);
+}
+
+/* اندازه فونت متون آموزشی (تنظیمات اپ) */
+.font-size-sm { font-size: 0.875rem; }
+.font-size-md { font-size: 1rem; }
+.font-size-lg { font-size: 1.125rem; }
+.font-size-xl { font-size: 1.25rem; }
+
+/* هاله طلایی برای کارت‌های ویژه */
+.gold-glow {
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--gold) 35%, transparent),
+    0 8px 30px -10px color-mix(in oklch, var(--gold) 35%, transparent);
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(400%); }
+}
+.scan-line {
+  animation: scanline 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  70% { transform: scale(1.25); opacity: 0; }
+  100% { opacity: 0; }
+}
+.pulse-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid var(--gold);
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+
+/* اعداد فارسی */
+.fa-num {
+  font-feature-settings: "ss02";
+}

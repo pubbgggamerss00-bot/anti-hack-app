@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ضد هک | سپر امنیتی آفلاین</title>
+<style>
+/* ─── فونت وزیرمتن (امبد شده برای اجرای کاملاً آفلاین) ─── */
+@font-face { font-family:'Vazirmatn'; font-weight:400; font-display:swap; src:url(data:font/woff2;base64,__FONT400__) format('woff2'); }
+@font-face { font-family:'Vazirmatn'; font-weight:500; font-display:swap; src:url(data:font/woff2;base64,__FONT500__) format('woff2'); }
+@font-face { font-family:'Vazirmatn'; font-weight:700; font-display:swap; src:url(data:font/woff2;base64,__FONT700__) format('woff2'); }
+@font-face { font-family:'Vazirmatn'; font-weight:800; font-display:swap; src:url(data:font/woff2;base64,__FONT800__) format('woff2'); }
+
+/* ─── توکن‌های تم سرمه‌ای/طلایی ─── */
+:root{
+  --background:#f6f5f1; --foreground:#252b3d; --card:#ffffff; --card-foreground:#252b3d;
+  --primary:#dfa73e; --primary-foreground:#1f2436; --secondary:#edebe4; --secondary-foreground:#333a4d;
+  --muted:#f0eee8; --muted-foreground:#6b7080; --accent:#efe5cf; --destructive:#e0454d;
+  --border:#dfddd5; --navy:#2b3147; --gold:#dfa73e;
+  --emerald:#10b981; --emerald-dark:#059669; --amber:#f59e0b; --amber-dark:#d97706; --orange:#f97316;
+}
+.dark{
+  --background:#141826; --foreground:#ece9e2; --card:#1b2030; --card-foreground:#ece9e2;
+  --primary:#eab54e; --primary-foreground:#171b2a; --secondary:#232939; --secondary-foreground:#ece9e2;
+  --muted:#212735; --muted-foreground:#8d93a3; --accent:#2a2c33; --destructive:#e35457;
+  --border:#2a3040; --navy:#0e1220; --gold:#eab54e;
+  --emerald:#34d399; --emerald-dark:#34d399; --amber:#fbbf24; --amber-dark:#fbbf24; --orange:#fb923c;
+}
+*{margin:0;padding:0;box-sizing:border-box;border-color:var(--border)}
+html{font-family:'Vazirmatn',system-ui,sans-serif;-webkit-text-size-adjust:100%}
+body{background:var(--background);color:var(--foreground);font-size:var(--appfs,16px);line-height:1.6;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font-family:inherit}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--gold) 45%,transparent);border-radius:99px}
+
+/* ─── چیدمان کلی ─── */
+#app{min-height:100vh;display:flex;flex-direction:column}
+header.top{position:sticky;top:0;z-index:40;border-bottom:1px solid color-mix(in srgb,var(--border) 60%,transparent);background:color-mix(in srgb,var(--background) 85%,transparent);backdrop-filter:blur(10px)}
+.topin{max-width:32rem;margin:0 auto;height:3.5rem;display:flex;align-items:center;gap:.5rem;padding:0 1rem}
+.topin h1{min-width:0;flex:1;font-size:.95rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(min-width:640px){.topin h1{font-size:1rem}}
+.iconbtn{display:flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;flex-shrink:0;border-radius:.75rem;background:var(--secondary);transition:.15s}
+.iconbtn:active{transform:scale(.94)}
+.logobox{display:flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;flex-shrink:0;border-radius:.75rem;background:var(--navy)}
+.logobox svg{width:1.5rem;height:1.5rem}
+.probtn{display:flex;align-items:center;gap:.375rem;height:2.25rem;padding:0 .75rem;border-radius:.75rem;font-size:.75rem;font-weight:700;transition:.15s;flex-shrink:0}
+.probtn.free{background:var(--primary);color:var(--primary-foreground);box-shadow:0 4px 6px -1px rgba(0,0,0,.1)}
+.probtn.on{background:color-mix(in srgb,var(--primary) 15%,transparent);color:var(--primary)}
+.probtn:active{transform:scale(.96)}
+main{max-width:32rem;width:100%;margin:0 auto;flex:1;padding:1rem 1rem 7rem}
+nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:40;border-top:1px solid color-mix(in srgb,var(--border) 60%,transparent);background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(10px);padding-bottom:env(safe-area-inset-bottom)}
+.navin{max-width:32rem;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.navbtn{display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:.625rem 0;font-size:.6875rem;font-weight:500;color:var(--muted-foreground);transition:.15s}
+.navbtn .pill{display:flex;align-items:center;justify-content:center;width:3.5rem;height:2rem;border-radius:99px;transition:.2s}
+.navbtn.active{color:var(--primary)}
+.navbtn.active .pill{background:color-mix(in srgb,var(--primary) 15%,transparent)}
+.ic{width:1.25rem;height:1.25rem;flex-shrink:0}
+.ic.sm{width:1rem;height:1rem}.ic.xs{width:.875rem;height:.875rem}.ic.xxs{width:.75rem;height:.75rem}.ic.lg{width:1.5rem;height:1.5rem}.ic.xl{width:1.75rem;height:1.75rem}.ic.xxl{width:2rem;height:2rem}
+
+/* ─── اجزای مشترک ─── */
+.card{border:1px solid var(--border);background:var(--card);border-radius:1.5rem}
+.pad{padding:1rem}
+.p15{padding:1.25rem}
+.space>*+*{margin-top:.75rem}
+.space3>*+*{margin-top:.875rem}
+.muted{color:var(--muted-foreground)}
+.t11{font-size:.6875rem}.t105{font-size:.65625rem}.t12{font-size:.75rem}.t125{font-size:.78125rem}.t13{font-size:.8125rem}.t14{font-size:.875rem}.t15{font-size:.9375rem}.t18{font-size:1.125rem}
+.b{font-weight:700}.eb{font-weight:800}.mb{font-weight:500}
+.lh5{line-height:1.25rem}.lh6{line-height:1.5rem}.lh7{line-height:1.75rem}.lh8{line-height:2rem}
+.center{text-align:center}
+.row{display:flex;align-items:center;gap:.75rem}
+.rowb{display:flex;align-items:flex-start;gap:.75rem}
+.grow{min-width:0;flex:1}
+.shrink0{flex-shrink:0}
+.chip{display:inline-flex;align-items:center;border-radius:99px;padding:.125rem .625rem;font-size:.6875rem;font-weight:700;background:color-mix(in srgb,#fff 10%,transparent)}
+.btn{display:flex;align-items:center;justify-content:center;gap:.25rem;width:100%;padding:.9rem 1rem;border-radius:1rem;font-size:.8125rem;font-weight:800;background:var(--primary);color:var(--primary-foreground);transition:.15s}
+.btn:active{transform:scale(.985);filter:brightness(1.06)}
+.btn.sec{background:var(--secondary);color:var(--foreground)}
+.btn:disabled{opacity:.7;cursor:default}
+.iconrow{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:1rem;border-radius:1rem;font-size:.75rem;font-weight:800}
+.badge-gold{display:flex;align-items:center;gap:.25rem;border-radius:99px;background:color-mix(in srgb,var(--primary) 15%,transparent);color:var(--primary);padding:.25rem .5rem;font-size:.5625rem;font-weight:700}
+.badge-free{border-radius:99px;background:color-mix(in srgb,var(--emerald) 15%,transparent);color:var(--emerald-dark);padding:.125rem .5rem;font-size:.5625rem;font-weight:700}
+.gold-glow{box-shadow:0 0 0 1px color-mix(in srgb,var(--gold) 35%,transparent),0 8px 30px -10px color-mix(in srgb,var(--gold) 35%,transparent)}
+.spin{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fadeSide{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+.anim{animation:fadeUp .3s ease both}
+.screenin{animation:fadeSide .22s ease-out both}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}.d4{animation-delay:.2s}.d5{animation-delay:.25s}.d6{animation-delay:.3s}.d7{animation-delay:.35s}
+@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(400%)}}
+.scanbox{position:relative;overflow:hidden;border:1px solid color-mix(in srgb,var(--primary) 40%,transparent);background:var(--card);border-radius:1rem;padding:1rem}
+.scanline{position:absolute;left:0;right:0;height:2.5rem;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--primary) 10%,transparent),transparent);animation:scanline 1.6s ease-in-out infinite}
+@keyframes pulsering{0%{transform:scale(.9);opacity:.7}70%{transform:scale(1.25);opacity:0}100%{opacity:0}}
+.pulse-ring{position:relative}
+.pulse-ring::after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid var(--gold);animation:pulsering 1.8s ease-out infinite}
+
+/* ─── بلوک‌های درس ─── */
+.blk{border:1px solid var(--border);background:var(--card);border-radius:1.5rem;padding:1rem}
+.blk.danger{border-color:color-mix(in srgb,var(--destructive) 30%,transparent);background:color-mix(in srgb,var(--destructive) 8%,transparent)}
+.blk.gold{border-color:color-mix(in srgb,var(--gold) 35%,transparent);background:color-mix(in srgb,var(--gold) 8%,transparent)}
+.blk.warn{border-color:color-mix(in srgb,var(--amber) 35%,transparent);background:color-mix(in srgb,var(--amber) 8%,transparent)}
+.blk.action{border-color:color-mix(in srgb,var(--emerald) 35%,transparent);background:color-mix(in srgb,var(--emerald) 8%,transparent)}
+.blk.summary{background:var(--secondary)}
+.blk h3{display:flex;align-items:center;gap:.5rem;font-size:.8125rem;font-weight:800;margin-bottom:.375rem}
+.blk .bicon{display:flex;align-items:center;justify-content:center;width:1.75rem;height:1.75rem;border-radius:.5rem}
+.blk .bicon.neutral,.blk .bicon.gold{background:color-mix(in srgb,var(--primary) 15%,transparent);color:var(--primary)}
+.blk .bicon.danger{background:color-mix(in srgb,var(--destructive) 15%,transparent);color:var(--destructive)}
+.blk .bicon.warn{background:color-mix(in srgb,var(--amber) 15%,transparent);color:var(--amber-dark)}
+.blk .bicon.action{background:color-mix(in srgb,var(--emerald) 15%,transparent);color:var(--emerald-dark)}
+.blk .bicon.summary{background:var(--secondary)}
+.blk p{font-size:.78125rem;line-height:1.75rem;color:color-mix(in srgb,var(--foreground) 85%,transparent)}
+
+/* ─── شبکه‌ها و ردیف‌های صفحه اصلی/لیست‌ها ─── */
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem}
+.toolgrid{display:grid;grid-template-columns:1fr;gap:.625rem}
+@media(min-width:640px){.toolgrid{grid-template-columns:repeat(2,1fr)}}
+.catcard{display:flex;flex-direction:column;align-items:flex-start;gap:.5rem;text-align:right;transition:.15s}
+.catcard:active{transform:scale(.98)}
+.catcard:hover{border-color:color-mix(in srgb,var(--primary) 50%,transparent);box-shadow:0 10px 15px -3px rgba(0,0,0,.1)}
+.caticon{display:flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;border-radius:1rem;background:color-mix(in srgb,var(--primary) 15%,transparent);color:var(--primary)}
+.catlink{margin-top:auto;display:flex;align-items:center;gap:.25rem;font-size:.6875rem;font-weight:700;color:var(--primary)}
+.quickrow{display:flex;align-items:center;gap:.75rem;padding:.875rem;text-align:right;transition:.15s}
+.quickrow:active{transform:scale(.98)}
+.qicon{display:flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;flex-shrink:0;border-radius:.75rem}
+.lesrow{display:flex;align-items:center;gap:.75rem;padding:.875rem;text-align:right;transition:.15s;animation:fadeUp .3s ease both}
+.lesrow:active{transform:scale(.985)}
+.lesrow:hover{border-color:color-mix(in srgb,var(--primary) 50%,transparent);box-shadow:0 4px 6px -1px rgba(0,0,0,.1)}
+.lesicon{display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;flex-shrink:0;border-radius:1rem;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)}
+
+/* ─── ردیف برنامه (AppRow) ─── */
+.approw{display:flex;align-items:center;gap:.75rem;border:1px solid var(--border);background:var(--card);border-radius:1rem;padding:.75rem}
+.appicon{display:flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;flex-shrink:0;border-radius:.75rem;font-size:1rem;font-weight:800}
+.appicon.bad{background:color-mix(in srgb,var(--destructive) 15%,transparent);color:var(--destructive)}
+.appicon.google{background:color-mix(in srgb,var(--primary) 15%,transparent);color:var(--primary)}
+.appicon.ok{background:var(--secondary);color:color-mix(in srgb,var(--foreground) 70%,transparent)}
+.tag{border-radius:.375rem;padding:.125rem .375rem;font-size:.5625rem;background:var(--muted)}
+.tag.bad{background:color-mix(in srgb,var(--destructive) 15%,transparent);color:var(--destructive);font-weight:700}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.ltr{direction:ltr}
+
+/* ─── سوئیچ، چک‌باکس، اسلایدر ─── */
+.sw{position:relative;width:2.6rem;height:1.45rem;border-radius:99px;background:var(--muted);transition:.2s;flex-shrink:0}
+.sw::after{content:"";position:absolute;top:.15rem;right:.15rem;width:1.15rem;height:1.15rem;border-radius:99px;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw.on{background:var(--primary)}
+.sw.on::after{transform:translateX(-1.15rem)}
+.cb{width:1.15rem;height:1.15rem;border-radius:.375rem;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;background:transparent}
+.cb.on{background:var(--primary);border-color:var(--primary);color:var(--primary-foreground)}
+.cb .ic{width:.75rem;height:.75rem;opacity:0}
+.cb.on .ic{opacity:1}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:1.5rem;background:transparent}
+input[type=range]::-webkit-slider-runnable-track{height:.375rem;border-radius:99px;background:linear-gradient(to left,var(--primary) var(--fill,50%),var(--muted) var(--fill,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:1.25rem;height:1.25rem;border-radius:99px;background:var(--primary);margin-top:-.4375rem;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.pbar{height:.625rem;border-radius:99px;background:var(--muted);overflow:hidden}
+.pbar>i{display:block;height:100%;border-radius:99px;transition:width 1s ease}
+.hbar{height:.625rem;border-radius:99px;background:var(--muted);overflow:hidden}
+.hbar>i{display:block;height:100%;border-radius:99px;transition:width .3s ease}
+
+/* ─── دیسکلیمر و توست ─── */
+.overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);padding:1rem}
+.dialog{width:100%;max-width:28rem;background:var(--card);border-radius:1.5rem;padding:1.5rem;box-shadow:0 25px 50px -12px rgba(0,0,0,.5)}
+#toast{position:fixed;bottom:5.5rem;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:.5rem;align-items:center;pointer-events:none;width:max-content;max-width:90vw}
+.toast{background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:.625rem 1rem;font-size:.75rem;font-weight:700;box-shadow:0 10px 25px -5px rgba(0,0,0,.25);animation:fadeUp .25s ease both;display:flex;align-items:center;gap:.5rem}
+.toast.ok{border-color:color-mix(in srgb,var(--emerald) 40%,transparent);color:var(--emerald-dark)}
+.toast.err{border-color:color-mix(in srgb,var(--destructive) 40%,transparent);color:var(--destructive)}
+
+/* ─── اسکنر سپر ─── */
+.gauge{position:relative;display:flex;align-items:center;justify-content:center;width:8rem;height:8rem;margin:0 auto}
+.gauge svg{width:8rem;height:8rem;transform:rotate(-90deg)}
+.gauge .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge .num b{font-size:1.875rem;font-weight:800;line-height:1.2}
+.gauge .num span{font-size:.625rem;color:var(--muted-foreground)}
+.steplist li{display:flex;align-items:center;justify-content:space-between;gap:.5rem;border-radius:.75rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.5rem .75rem;font-size:.6875rem;line-height:1.25rem}
+.stbadge{border-radius:.5rem;padding:.125rem .5rem;font-size:.625rem;font-weight:700;flex-shrink:0}
+.st-ok{background:color-mix(in srgb,var(--emerald) 12%,transparent);color:var(--emerald-dark)}
+.st-warn{background:color-mix(in srgb,var(--amber) 15%,transparent);color:var(--amber-dark)}
+.st-danger{background:color-mix(in srgb,var(--destructive) 15%,transparent);color:var(--destructive)}
+.issue{border-radius:1rem;padding:.875rem}
+.issue.critical{border:1px solid color-mix(in srgb,var(--destructive) 40%,transparent);background:color-mix(in srgb,var(--destructive) 12%,transparent)}
+.issue.high{border:1px solid color-mix(in srgb,var(--destructive) 30%,transparent);background:color-mix(in srgb,var(--destructive) 8%,transparent)}
+.issue.medium{border:1px solid color-mix(in srgb,var(--amber) 35%,transparent);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.issue.low{border:1px solid var(--border);background:var(--muted)}
+.fixbtn{height:2rem;flex-shrink:0;padding:0 .75rem;border-radius:.75rem;font-size:.6875rem;font-weight:700;background:var(--primary);color:var(--primary-foreground)}
+.permtab{display:flex;align-items:center;gap:.375rem;flex-shrink:0;border-radius:.75rem;padding:.5rem .875rem;font-size:.6875rem;font-weight:700;background:var(--secondary);color:var(--muted-foreground);transition:.15s}
+.permtab.on{background:var(--primary);color:var(--primary-foreground)}
+.pwbox{display:flex;align-items:center;gap:.5rem;border:1px solid color-mix(in srgb,var(--primary) 40%,transparent);background:var(--navy);border-radius:1rem;padding:1rem}
+.pwbox code{min-width:0;flex:1;word-break:break-all;text-align:center;font-family:ui-monospace,monospace;font-size:.875rem;font-weight:700;color:var(--primary);direction:ltr}
+.dot{width:.5rem;height:.5rem;border-radius:99px}
+.stepnum{display:flex;align-items:center;justify-content:center;width:1.25rem;height:1.25rem;flex-shrink:0;border-radius:.5rem;background:var(--primary);font-size:.625rem;font-weight:800;color:var(--primary-foreground);margin-top:.125rem}
+
+/* ─── صفحه بارگذاری ─── */
+#loading{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:var(--background)}
+#loading .logo{display:flex;align-items:center;justify-content:center;width:5rem;height:5rem;border-radius:1.5rem;background:var(--navy)}
+#loading .logo svg{width:3.5rem;height:3.5rem}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="loading">
+  <div class="logo pulse-ring">__LOGO__</div>
+  <p class="t14 muted">در حال آماده‌سازی سپر امنیتی...</p>
+</div>
+
+<div id="app" class="hidden">
+  <header class="top">
+    <div class="topin">
+      <span id="h-left"></span>
+      <h1 id="h-title">ضد هک</h1>
+      <button id="h-pro" class="probtn free" data-act="go-pro"></button>
+    </div>
+  </header>
+  <main><div id="screen"></div></main>
+  <nav class="bottom" aria-label="ناوبری اصلی"><div class="navin" id="nav"></div></nav>
+</div>
+
+<div id="disclaimer" class="overlay hidden"></div>
+<div id="toast"></div>
+
+<script>
+/* ═══════════ داده‌های کامل برنامه (۲۰ درس + ۱۳ ابزار + ۱۳ میانبر + ۱۵ چک‌لیست + ۳۶ برنامه) ═══════════ */
+const LOGO = __LOGOJSON__;
+const DATA = __DATA__;
+const ICONS = __ICONS__;
+const DISCLAIMER = __DISCLAIMER__;
+
+/* ═══════════ ابزارهای پایه ═══════════ */
+const LS = { pro:'ainthack-pro', theme:'ainthack-theme', font:'ainthack-font', device:'ainthack-device-code', onboarded:'ainthack-onboarded', checklist:'ainthack-checklist', state:'ainthack-devicestate', apps:'ainthack-simapps', score:'ainthack-lastscan' };
+const $ = (s, r) => (r || document).querySelector(s);
+const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const fa = n => Number(n).toLocaleString('fa-IR');
+const fa1 = n => Number(n).toLocaleString('fa-IR', { maximumFractionDigits: 1 });
+const faDate = iso => new Date(iso).toLocaleDateString('fa-IR', { year:'numeric', month:'long', day:'numeric' });
+const ic = (name, cls) => '<svg class="ic ' + (cls||'') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[name] || ICONS.Shield) + '</svg>';
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function toast(msg, type) {
+  const el = document.createElement('div');
+  el.className = 'toast ' + (type || '');
+  el.innerHTML = (type === 'err' ? ic('AlertTriangle', 'xs') : ic('CheckCircle2', 'xs')) + '<span>' + esc(msg) + '</span>';
+  $('#toast').appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 320); }, 2400);
+}
+
+/* ═══════════ وضعیت برنامه (مانند اپ اصلی با localStorage) ═══════════ */
+const DEFAULT_STATE = { screenLock:'fingerprint', usbDebugging:true, playProtect:true, unknownSources:true, securityPatch:'2025-05-01', findMyDevice:false, simPin:false, autoUpdates:true, notifUnlocked:true };
+
+const S = {
+  stack: [{ name:'home' }],
+  isPro: false, theme:'dark', font:'md', deviceCode:'',
+  deviceState: JSON.parse(JSON.stringify(DEFAULT_STATE)),
+  apps: [], lastScanScore: null,
+};
+
+function loadState() {
+  try {
+    S.isPro = localStorage.getItem(LS.pro) === '1';
+    S.theme = localStorage.getItem(LS.theme) || 'dark';
+    S.font = localStorage.getItem(LS.font) || 'md';
+    let d = localStorage.getItem(LS.device);
+    if (!d) {
+      const chars = 'ABCDEF0123456789';
+      const seg = () => Array.from({ length:4 }, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+      d = seg() + '-' + seg() + '-' + seg();
+      try { localStorage.setItem(LS.device, d); } catch(e){}
+    }
+    S.deviceCode = d;
+    const st = localStorage.getItem(LS.state);
+    if (st) S.deviceState = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), JSON.parse(st));
+    const ap = localStorage.getItem(LS.apps);
+    S.apps = ap ? JSON.parse(ap) : JSON.parse(JSON.stringify(DATA.simApps.map(a => Object.assign({}, a, { permissions: Array.isArray(a.permissions) ? a.permissions : (a.permissions ? String(a.permissions).split(',') : []) }))));
+    const sc = localStorage.getItem(LS.score);
+    S.lastScanScore = sc === null || sc === undefined ? null : Number(sc);
+  } catch(e) {}
+  document.documentElement.classList.toggle('dark', S.theme === 'dark');
+  document.documentElement.style.setProperty('--appfs', { sm:'0.875rem', md:'1rem', lg:'1.125rem', xl:'1.25rem' }[S.font] || '1rem');
+}
+const saveState = () => { try { localStorage.setItem(LS.state, JSON.stringify(S.deviceState)); localStorage.setItem(LS.apps, JSON.stringify(S.apps)); localStorage.setItem(LS.score, JSON.stringify(S.lastScanScore)); } catch(e){} };
+
+function setTheme(t) { S.theme = t; try { localStorage.setItem(LS.theme, t); } catch(e){} document.documentElement.classList.toggle('dark', t === 'dark'); }
+function setFont(f) { S.font = f; try { localStorage.setItem(LS.font, f); } catch(e){} document.documentElement.style.setProperty('--appfs', { sm:'0.875rem', md:'1rem', lg:'1.125rem', xl:'1.25rem' }[f] || '1rem'); }
+function setPro(v) { S.isPro = v; try { localStorage.setItem(LS.pro, v ? '1' : '0'); } catch(e){} }
+
+/* ═══════════ ناوبری (پشته‌ای مثل اپ اندروید) ═══════════ */
+const TABS = [ {name:'home', icon:'Home', label:'خانه'}, {name:'lessons', icon:'BookOpen', label:'آموزش‌ها'}, {name:'tools', icon:'Wrench', label:'ابزارها'}, {name:'settings', icon:'Settings', label:'تنظیمات'} ];
+const TAB_TITLES = { home:'ضد هک', lessons:'کتابخانه مطالب آموزشی ضد هک', tools:'جعبه ابزار امنیتی پیشرفته', settings:'تنظیمات برنامه', pro:'فعالسازی نسخه حرفه ای' };
+
+function cur() { return S.stack[S.stack.length - 1]; }
+function push(scr) { S.stack.push(scr); render(); window.scrollTo(0, 0); }
+function pop() { if (S.stack.length > 1) { S.stack.pop(); render(); window.scrollTo(0, 0); } else return false; return true; }
+function setTab(scr) { S.stack = [scr]; render(); window.scrollTo(0, 0); }
+window.__handleBack = function () { return pop(); };
+
+function titleFor() {
+  const c = cur();
+  if (TAB_TITLES[c.name]) return TAB_TITLES[c.name];
+  if (c.name === 'lesson-detail') { const l = DATA.lessons.find(x => x.id === c.id); return l ? l.title : 'درس آموزشی'; }
+  if (c.name === 'tool') { const t = DATA.tools.find(x => x.route === c.route); return t ? t.title : 'ابزار امنیتی'; }
+  return 'ضد هک';
+}
+
+/* ═══════════ هدر و نویگیشن ═══════════ */
+function renderHeader() {
+  const c = cur();
+  const isRoot = ['home','lessons','tools','settings'].includes(c.name);
+  $('#h-left').innerHTML = isRoot ? '<span class="logobox">' + LOGO + '</span>' : '<button class="iconbtn" data-act="back" aria-label="بازگشت">' + ic('ChevronLeft') + '</button>';
+  $('#h-title').textContent = titleFor();
+  const hp = $('#h-pro');
+  if (c.name === 'pro') { hp.classList.add('hidden'); } else {
+    hp.classList.remove('hidden');
+    hp.className = 'probtn ' + (S.isPro ? 'on' : 'free');
+    hp.innerHTML = ic('Crown', 'xs') + '<span>' + (S.isPro ? 'پرو فعال است' : 'ارتقا به پرو') + '</span>';
+  }
+  $('#nav').innerHTML = TABS.map(t => {
+    const active = cur().name === t.name;
+    return '<button class="navbtn ' + (active ? 'active' : '') + '" data-act="tab" data-name="' + t.name + '"' + (active ? ' aria-current="page"' : '') + '><span class="pill">' + ic(t.icon) + '</span>' + t.label + '</button>';
+  }).join('');
+}
+
+/* ═══════════ موتور امنیتی (پورت computeSecurityFindings) ═══════════ */
+function computeSecurityFindings() {
+  const st = S.deviceState, apps = S.apps;
+  const issues = [];
+  let score = 100;
+  if (st.screenLock === 'none') { issues.push({ id:'screen-lock', severity:'critical', title:'قفل صفحه فعال نیست', detail:'بررسی قفل صفحه، وضعیت حافظه امنیتی، فیس‌آیدی و اثر انگشت — گوشی شما بدون قفل است!', fixable:true, fixAction:'enable-screen-lock' }); score -= 20; }
+  else if (st.screenLock === 'pattern' || st.screenLock === 'pin') { issues.push({ id:'screen-lock', severity:'low', title:'قفل صفحه ساده', detail:'الگو یا پین ساده امنیت کافی ندارد؛ بهتر است اثر انگشت فعال شود.', fixable:true, fixAction:'enable-screen-lock' }); score -= 6; }
+  if (st.usbDebugging) { issues.push({ id:'usb-debugging', severity:'high', title:'عیب‌یابی USB روشن است', detail:'بررسی وضعیت عیب‌یابی USB (Developer options)... [هشدار: روشن است - تضعیف ایمنی]', fixable:true, fixAction:'disable-usb' }); score -= 12; }
+  if (!st.playProtect) { issues.push({ id:'play-protect', severity:'high', title:'Google Play Protect غیرفعال است', detail:'اسکن سیستم با موتور زنده گوگل برای یافتن ماژول‌های بدافزار و جاسوسی از کار افتاده است.', fixable:true, fixAction:'enable-play-protect' }); score -= 12; }
+  if (st.unknownSources) { issues.push({ id:'unknown-sources', severity:'high', title:'نصب برنامه از مراجع ناشناس باز است', detail:'دسترسی برنامه‌های پیام‌رسان یا مرورگر به نصب فایل‌های APK مشکوک فعال است.', fixable:true, fixAction:'disable-unknown-sources' }); score -= 10; }
+  if (!st.findMyDevice) { issues.push({ id:'find-my-device', severity:'medium', title:'سرویس Find My Device خاموش است', detail:'امکان ردیابی، قفل و پاکسازی از راه دور تلفن همراه وجود ندارد.', fixable:true, fixAction:'enable-fmd' }); score -= 6; }
+  if (!st.simPin) { issues.push({ id:'sim-pin', severity:'medium', title:'سیم‌کارت فاقد پین کد است', detail:'در صورت سرقت فیزیکی گوشی، سیم‌کارت روی دستگاه دیگری قابل استفاده است.', fixable:true, fixAction:'enable-sim-pin' }); score -= 5; }
+  if (!st.autoUpdates) { issues.push({ id:'auto-updates', severity:'medium', title:'بروزرسانی خودکار غیرفعال است', detail:'وصله‌های امنیتی ماهانه گوگل پلی به‌صورت خودکار نصب نمی‌شوند.', fixable:true, fixAction:'enable-updates' }); score -= 6; }
+  if (st.notifUnlocked) { issues.push({ id:'notif', severity:'low', title:'اعلان‌ها بدون محدودیت هستند', detail:'محدود ساختن دسترسی نوتیفیکیشن‌ها برای جلوگیری از سرقت کدهای یکبارمصرف بانکی توصیه می‌شود.', fixable:true, fixAction:'restrict-notif' }); score -= 3; }
+  const patchDate = new Date(st.securityPatch).getTime();
+  if (patchDate < Date.now() - 180 * 86400000) { issues.push({ id:'security-patch', severity:'high', title:'وصله امنیتی سیستم‌عامل قدیمی است', detail:'آخرین وصله امنیتی: ' + st.securityPatch + ' — آپدیت همیشگی سیستم‌عامل اندروید و آپدیت امنیتی ماهانه گوگل پلی الزامی است.', fixable:true, fixAction:'update-patch' }); score -= 10; }
+  const suspicious = apps.filter(a => a.isSuspicious);
+  if (suspicious.length) { issues.push({ id:'suspicious-apps', severity:'critical', title:fa(suspicious.length) + ' برنامه مشکوک/جاسوسی یافت شد', detail:'امضای بسته‌های زیر سالم نیست یا رفتار مخرب دارند: ' + suspicious.map(s => s.name).join('، '), fixable:true, fixAction:'remove-suspicious' }); score -= Math.min(15, suspicious.length * 3); }
+  const admins = apps.filter(a => a.isDeviceAdmin && !a.isGooglePackage);
+  if (admins.length) { issues.push({ id:'device-admin', severity:'high', title:'دسترسی ادمین مشکوک فعال است', detail:'برنامه‌های دارای Device Admin: ' + admins.map(a => a.name).join('، '), fixable:true, fixAction:'revoke-admin' }); score -= 6; }
+  const accs = apps.filter(a => a.isAccessibility && !a.isGooglePackage);
+  if (accs.length) { issues.push({ id:'accessibility', severity:'high', title:'سرویس Accessibility مزاحم فعال است', detail:'برنامه‌های زیر رفتارهای حرکتی و کلیک‌های شما را ثبت می‌کنند: ' + accs.map(a => a.name).join('، '), fixable:true, fixAction:'revoke-accessibility' }); score -= 6; }
+  const overs = apps.filter(a => a.isOverlay && !a.isGooglePackage);
+  if (overs.length) { issues.push({ id:'overlay', severity:'medium', title:'برنامه‌های Overlay (حباب شناور) فعال هستند', detail:'ردیابی برنامه‌هایی که توانایی ترسیم روی صفحه نمایشگر دارند: ' + overs.map(a => a.name).join('، '), fixable:true, fixAction:'revoke-overlay' }); score -= 4; }
+  const hidden = apps.filter(a => !a.hasLauncherIcon && !a.isSystem && !a.isGooglePackage);
+  if (hidden.length) { issues.push({ id:'hidden-apps', severity:'high', title:fa(hidden.length) + ' برنامه پنهان بدون آیکون یافت شد', detail:'برنامه‌های نصب‌شده توسط کاربر که فاقد آیکون شلیک‌کننده (پرتابگر) هستند؛ معمولاً جاسوس‌افزارها هستند.', fixable:true, fixAction:'remove-hidden' }); score -= 8; }
+  return { score: Math.max(12, Math.min(100, score)), issues };
+}
+
+const SCAN_STEPS = [
+  { id:'packages', label:'در حال بررسی پایگاه بسته‌های اندروید و مراجع پکیج...' },
+  { id:'screenlock', label:'بررسی قفل صفحه، وضعیت حافظه امنیتی، فیس‌آیدی و اثر انگشت...' },
+  { id:'usb', label:'بررسی وضعیت عیب‌یابی USB (Developer options)...' },
+  { id:'admin', label:'آنالیز دسترسی ادمین مشکوک...' },
+  { id:'signature', label:'تطبیق امضای بسته‌های گوگل موتور...' },
+  { id:'unsigned', label:'جست‌وجوی برنامه‌های امضانشده...' },
+  { id:'accounts', label:'بررسی جیمیل‌ها و حساب‌های همسان‌سازی شده ناشناس روی تبلت یا موبایل شما...' },
+  { id:'protect', label:'اسکن سیستم با موتور زنده گوگل برای یافتن ماژول‌های بدافزار و جاسوسی...' },
+  { id:'root', label:'ممیزی سیستم‌عامل، ردیابی شبیه‌سازها، مانیتور برنامه‌ها و روت...' },
+];
+function stepStatus(stepId) {
+  const st = S.deviceState, apps = S.apps;
+  switch (stepId) {
+    case 'screenlock': return st.screenLock === 'fingerprint' ? ['ok','[سالم]'] : st.screenLock === 'none' ? ['danger','[هشدار: بدون قفل]'] : ['warn','[هشدار: قفل ساده]'];
+    case 'usb': return st.usbDebugging ? ['danger','[هشدار: روشن است - تضعیف ایمنی]'] : ['ok','[سالم]'];
+    case 'admin': { const n = apps.filter(a => a.isDeviceAdmin && !a.isGooglePackage).length; return n ? ['danger','[خطر: دسترسی مشکوک]'] : ['ok','[سالم]']; }
+    case 'signature': return ['ok','[سالم]'];
+    case 'unsigned': { const n = apps.filter(a => !a.signatureOk && !a.isSystem).length; return n ? ['warn','[هشدار: ' + fa(n) + ' بسته امضانشده]'] : ['ok','[سالم]']; }
+    case 'accounts': return ['ok','[سالم]'];
+    case 'protect': return st.playProtect ? ['ok','[فعال]'] : ['warn','[غیرفعال]'];
+    case 'root': return ['ok','[روت نشده]'];
+    default: return ['ok','...'];
+  }
+}
+
+function applyFix(action) {
+  const st = S.deviceState;
+  let message = 'مشکل با موفقیت رفع شد!';
+  switch (action) {
+    case 'enable-screen-lock': st.screenLock = 'fingerprint'; message = 'قفل اثر انگشت فعال شد'; break;
+    case 'disable-usb': st.usbDebugging = false; message = 'عیب‌یابی USB خاموش شد'; break;
+    case 'enable-play-protect': st.playProtect = true; message = 'Google Play Protect فعال شد'; break;
+    case 'disable-unknown-sources': st.unknownSources = false; message = 'نصب از مراجع ناشناس بسته شد'; break;
+    case 'enable-fmd': st.findMyDevice = true; message = 'Find My Device فعال شد'; break;
+    case 'enable-sim-pin': st.simPin = true; message = 'پین کد سیم‌کارت تنظیم شد'; break;
+    case 'update-patch': case 'enable-updates': st.autoUpdates = true; st.securityPatch = new Date().toISOString().slice(0,10); message = 'سیستم به آخرین وصله امنیتی بروزرسانی شد'; break;
+    case 'restrict-notif': st.notifUnlocked = false; message = 'دسترسی اعلان‌ها محدود شد'; break;
+    case 'remove-suspicious': S.apps.forEach(a => { if (a.isSuspicious) { a.isSuspicious = false; a.signatureOk = true; a.isDeviceAdmin = false; a.isAccessibility = false; a.isOverlay = false; a.isUsageAccess = false; a.permissions = []; } }); message = 'برنامه‌های مشکوک پاک‌سازی شدند'; break;
+    case 'revoke-admin': S.apps.forEach(a => { if (a.isDeviceAdmin && !a.isGooglePackage) a.isDeviceAdmin = false; }); message = 'دسترسی ادمین برنامه‌های مشکوک لغو شد'; break;
+    case 'revoke-accessibility': S.apps.forEach(a => { if (a.isAccessibility && !a.isGooglePackage) a.isAccessibility = false; }); message = 'سرویس Accessibility برنامه‌های مزاحم غیرفعال شد'; break;
+    case 'revoke-overlay': S.apps.forEach(a => { if (a.isOverlay && !a.isGooglePackage) a.isOverlay = false; }); message = 'مجوز Overlay برنامه‌های مشکوک بسته شد'; break;
+    case 'remove-hidden': S.apps = S.apps.filter(a => !(a.hasLauncherIcon === false && !a.isSystem && !a.isGooglePackage)); message = 'برنامه‌های پنهان حذف نصب شدند'; break;
+    default: return { ok:false, error:'اقدام شناخته نشد' };
+  }
+  saveState();
+  return { ok:true, message };
+}
+
+/* ═══════════ اجزای مشترک ═══════════ */
+const PERM_META = { sms:{label:'پیامک', icon:'CardSim'}, gps:{label:'مکان (GPS)', icon:'MapPin'}, camera:{label:'دوربین', icon:'Camera'}, contacts:{label:'مخاطبین', icon:'Users'}, mic:{label:'میکروفون', icon:'Mic'} };
+
+function appRowHtml(a, badge) {
+  const cls = a.isSuspicious ? 'bad' : a.isGooglePackage ? 'google' : 'ok';
+  return '<div class="approw">'
+    + '<span class="appicon ' + cls + '">' + esc(a.name.slice(0,2)) + '</span>'
+    + '<div class="grow">'
+    + '<p class="row" style="gap:.375rem;font-size:.8125rem;font-weight:700"><span class="grow" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(a.name) + '</span>'
+    + (a.isSuspicious ? ic('Bug','xs') : '') + '</p>'
+    + '<p class="t105 muted ltr mono" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(a.packageName) + '</p>'
+    + '<div class="row" style="gap:.375rem;margin-top:.25rem;flex-wrap:wrap">'
+    + (a.isSystem ? '<span class="tag">سیستمی</span>' : '')
+    + (!a.signatureOk ? '<span class="tag bad">امضای مشکوک</span>' : '')
+    + (!a.hasLauncherIcon && !a.isSystem ? '<span class="tag bad">بدون آیکون</span>' : '')
+    + '<span class="row" style="gap:.25rem;font-size:.5625rem;color:var(--muted-foreground)">' + ic('HardDrive','xxs') + fa(a.sizeMb) + ' مگابایت</span>'
+    + '</div></div>' + (badge || '') + '</div>';
+}
+
+function proGateHtml() {
+  return '<div class="card pad center gold-glow" style="display:flex;flex-direction:column;align-items:center;gap:1rem;padding:2rem 1rem">'
+    + '<span style="display:flex;align-items:center;justify-content:center;width:4rem;height:4rem;border-radius:1.5rem;background:color-mix(in srgb,var(--primary) 15%,transparent)">' + ic('Crown','xl') + '</span>'
+    + '<h2 class="t14 eb">این بخش در نسخه حرفه‌ای فعال است</h2>'
+    + '<p class="t12 lh6 muted" style="max-width:20rem">با یک‌بار فعالسازی نسخه پرو، به تمامی ۲۰ درس جامع آموزشی ضد هک و ۱۳ ابزار پیشرفته امنیتی شامل پنهان‌یاب بدافزار، کاوشگر دسترسی‌ها و سپر اسکن سریع نفوذ دسترسی نامحدود و مادام‌العمر پیدا کنید.</p>'
+    + '<button class="btn" data-act="go-pro">ارتقا و فعالسازی</button></div>';
+}
+
+function scanIntroHtml(title, desc, scanning, found) {
+  return '<div class="space3"><div class="card center p15">'
+    + '<span style="display:flex;align-items:center;justify-content:center;width:4rem;height:4rem;margin:0 auto;border-radius:1.5rem;background:color-mix(in srgb,var(--primary) 12%,transparent)">' + ic('Wrench','xl') + '</span>'
+    + '<h2 class="t13 eb" style="margin-top:.75rem">' + esc(title) + '</h2>'
+    + '<p class="t11 lh6 muted" style="margin-top:.375rem">' + desc + '</p>'
+    + '<button class="btn" data-act="tool-scan" style="margin-top:1rem">' + (scanning ? ic('Loader2','sm spin') : ic('Play','sm')) + (scanning ? ' در حال اسکن عمیق...' : found === null ? 'شروع اسکن دسترسی‌های بحرانی' : 'تکرار مجدد اسکن') + '</button>'
+    + '</div>'
+    + (scanning ? '<div class="scanbox"><div class="scanline"></div><p class="t12 b" style="position:relative;text-align:center;color:var(--primary)">در حال واکاوی لایه‌های سیستمی و بسته‌های فاقد پرتابگر...</p></div>' : '')
+    + '</div>';
+}
+
+/* ═══════════ صفحه: خانه ═══════════ */
+function homeHtml() {
+  const freeLessons = DATA.lessons.filter(l => l.isFree).length;
+  const score = S.lastScanScore;
+  const scoreColor = score === null ? 'muted' : score >= 90 ? 'em' : score >= 70 ? '' : 'red';
+  const scoreCss = score === null ? 'color:var(--muted-foreground)' : score >= 90 ? 'color:var(--emerald)' : score >= 70 ? 'color:var(--primary)' : 'color:var(--destructive)';
+  return '<div class="space">'
+    + '<section class="p15 anim" style="position:relative;overflow:hidden;border-radius:1.5rem;background:var(--navy);color:#fff">'
+    + '<div style="position:absolute;left:-2rem;top:-2rem;width:9rem;height:9rem;border-radius:99px;background:color-mix(in srgb,var(--primary) 20%,transparent);filter:blur(24px)"></div>'
+    + '<div style="position:absolute;right:-1.5rem;bottom:-2.5rem;width:8rem;height:8rem;border-radius:99px;background:color-mix(in srgb,var(--primary) 10%,transparent);filter:blur(24px)"></div>'
+    + '<div class="row" style="position:relative">'
+    + '<span class="shrink0" style="width:4rem;height:4rem">' + LOGO + '</span>'
+    + '<div class="grow"><h2 class="t18 eb">اپلیکیشن امنیتی ضد هک</h2>'
+    + '<p class="t12 lh6" style="color:rgba(255,255,255,.75)">مرجع آفلاین حریم خصوصی و امنیت</p>'
+    + '<div class="row" style="gap:.375rem;margin-top:.375rem;flex-wrap:wrap"><span class="chip">۱۰۰٪ آفلاین</span><span class="chip">' + fa(DATA.lessons.length) + ' مبحث جامع</span><span class="chip">' + fa(DATA.tools.length) + ' ابزار مجهز</span></div>'
+    + '</div></div></section>'
+
+    + '<section class="card pad anim d1"><div class="row" style="justify-content:space-between">'
+    + '<div class="row"><span style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;border-radius:1rem;background:color-mix(in srgb,var(--primary) 15%,transparent)">' + ic('ShieldCheck','lg') + '</span>'
+    + '<div><h3 class="t13 eb">امتیاز سلامت امنیتی گوشی</h3><p class="t11 lh5 muted">میزان مصونیت دفاعی تلفن شما</p></div></div>'
+    + '<div class="t18 eb ' + scoreColor + '" style="' + scoreCss + '" aria-live="polite">' + (score === null ? '—' : fa(score) + '٪') + '</div>'
+    + '</div>'
+    + (score !== null ? '<div class="pbar" style="margin-top:.75rem"><i style="width:' + score + '%;background:' + (score >= 90 ? 'var(--emerald)' : score >= 70 ? 'var(--primary)' : 'var(--destructive)') + '"></i></div>' : '')
+    + '<button class="btn" data-act="open-tool" data-route="golden-shield" style="margin-top:.75rem;padding:1.15rem">' + ic('Zap','sm') + (score === null ? 'راه‌اندازی اسکن کامل سپر طلایی گوشی' : 'تکرار مجدد اسکن') + '</button>'
+    + '</section>'
+
+    + '<section class="grid2" aria-label="دسته‌بندی‌های اصلی برنامه">'
+    + '<button class="card pad anim d2 catcard" data-act="tab" data-name="lessons"><span class="caticon">' + ic('BookOpen','lg') + '</span><span class="t13 eb">کتابخانه آموزشی</span><span class="t11 lh5 muted">' + fa(DATA.lessons.length) + ' مقاله تخصصی و راهنمای تفصیلی پاکسازی هک</span><span class="catlink">' + fa(freeLessons) + ' درس رایگان ' + ic('ChevronLeft','xs') + '</span></button>'
+    + '<button class="card pad anim d3 catcard" data-act="tab" data-name="tools"><span class="caticon">' + ic('Wrench','lg') + '</span><span class="t13 eb">جعبه ابزار امنیتی</span><span class="t11 lh5 muted">' + fa(DATA.tools.length) + ' ابزار و پایشگر سیستم شامل سپر طلایی، پنهان‌یاب و بازرس دسترسی‌ها</span><span class="catlink">ورود به ابزارها ' + ic('ChevronLeft','xs') + '</span></button>'
+    + '</section>'
+
+    + '<section class="grid2" aria-label="میانبرهای سریع">'
+    + '<button class="card anim d4 quickrow" data-act="open-tool" data-route="checklist"><span class="qicon" style="background:color-mix(in srgb,var(--emerald) 15%,transparent);color:var(--emerald)">' + ic('ListChecks') + '</span><span class="grow"><span class="t12 eb" style="display:block">شناسنامه پدافند</span><span class="t105 muted" style="display:block">چک‌لیست طلایی ' + fa(DATA.checklist.length) + ' موردی</span></span></button>'
+    + '<button class="card anim d5 quickrow" data-act="open-tool" data-route="password-generator"><span class="qicon" style="background:color-mix(in srgb,var(--amber) 15%,transparent);color:var(--amber)">' + ic('Zap') + '</span><span class="grow"><span class="t12 eb" style="display:block">ساخت رمز عبور قوی</span><span class="t105 muted" style="display:block">تولیدکننده آفلاین غیرقابل کرک</span></span></button>'
+    + '</section>'
+
+    + (S.isPro
+      ? '<div class="card anim d6" style="display:flex;align-items:center;gap:.75rem;padding:1rem;border-color:color-mix(in srgb,var(--primary) 40%,transparent);background:color-mix(in srgb,var(--primary) 10%,transparent)"><span style="display:flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;border-radius:1rem;background:var(--primary);color:var(--primary-foreground)">' + ic('Crown','lg') + '</span><div><p class="row" style="gap:.375rem;font-size:.8125rem;font-weight:800;color:var(--primary)">نسخه پرو فعال است ' + ic('CheckCircle2','xs') + '</p><p class="t11 muted">از دسترسی کاملاً نامحدود و امن لذت ببرید</p></div></div>'
+      : '<button class="card anim d6 gold-glow" data-act="go-pro" style="display:flex;align-items:center;gap:.75rem;width:100%;padding:1rem;text-align:right;border-color:color-mix(in srgb,var(--primary) 40%,transparent);background:linear-gradient(to left,color-mix(in srgb,var(--primary) 15%,transparent),transparent)"><span style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;flex-shrink:0;border-radius:1rem;background:var(--primary);color:var(--primary-foreground)">' + ic('Crown','lg') + '</span><span class="grow"><span class="row" style="gap:.375rem;font-size:.8125rem;font-weight:800;color:var(--primary)">ارتقا به نسخه پرو / خرید از مایکت ' + ic('Sparkles','xs') + '</span><span class="t11 lh5 muted" style="display:block;margin-top:.125rem">بازگشایی کل ۲۰ مبحث تفصیلی رفع هک اکانت‌ها و ۱۳ ابزار پیشرفته امنیتی — از دسترسی کاملاً نامحدود و امن لذت ببرید</span></span></button>')
+
+    + '<p class="anim d7" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 50%,transparent);padding:1rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">هدف این برنامه افزایش سطح آگاهی سایبری عموم مردم، تامین امنیت شبکه‌های اجتماعی و حفظ حریم خصوصی است. تمامی محتواها و کدهای موجود به صورت کاملاً مستقل و ۱۰۰٪ آفلاین توسعه یافته است.</p>'
+    + '</div>';
+}
+
+/* ═══════════ صفحه: آموزش‌ها ═══════════ */
+let lessonQuery = '';
+function lessonsHtml() {
+  const q = lessonQuery.trim();
+  const list = DATA.lessons.filter(l => l.title.includes(q) || l.subtitle.includes(q));
+  return '<div class="space3">'
+    + '<div style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 50%,transparent);padding:.875rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">' + fa(DATA.lessons.length) + ' مقاله تخصصی و راهنمای تفصیلی پاکسازی هک، امنیت کاربری و پیشگیری از نفوذ سایبری — اصول ریاضی و تجربی، قدم به قدم و موم به موم.</div>'
+    + '<div style="position:relative">' + '<span style="position:absolute;right:.75rem;top:50%;transform:translateY(-50%);color:var(--muted-foreground);display:flex">' + ic('Search','sm') + '</span>'
+    + '<input id="lesson-q" data-act="lesson-search" type="text" value="' + esc(lessonQuery) + '" placeholder="جستجو میان مباحث آموزشی..." aria-label="جستجوی درس‌ها" style="width:100%;height:2.75rem;border-radius:1rem;border:1px solid var(--border);background:var(--card);color:var(--foreground);padding:0 2.25rem 0 1rem;font-size:.8125rem;outline:none">'
+    + '</div>'
+    + '<div class="space3" id="lesson-list">'
+    + (list.length ? list.map((l, i) => {
+        const locked = !l.isFree && !S.isPro;
+        return '<button class="card lesrow" data-act="open-lesson" data-id="' + l.id + '" style="animation-delay:' + Math.min(i * 0.03, 0.4) + 's">'
+          + '<span class="lesicon">' + ic(l.icon, 'lg') + '</span>'
+          + '<span class="grow"><span class="row" style="gap:.375rem;font-size:.8125rem;font-weight:800;line-height:1.5rem"><span>' + esc(l.title) + '</span>' + (l.isFree ? '<span class="badge-free">رایگان</span>' : '') + '</span>'
+          + '<span class="t11 lh5 muted" style="display:block;margin-top:.125rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">' + esc(l.subtitle) + '</span>'
+          + '<span class="row" style="gap:.25rem;margin-top:.25rem;font-size:.625rem;color:var(--muted-foreground)">' + ic('Clock','xxs') + fa(l.readMinutes) + ' دقیقه مطالعه</span></span>'
+          + (locked ? '<span style="display:flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;flex-shrink:0;border-radius:.75rem;background:var(--muted)">' + ic('Lock','xs') + '</span>' : ic('ChevronLeft','sm muted'))
+          + '</button>';
+      }).join('') : '<p class="center t14 muted" style="padding:2.5rem 0">مبحثی با این عبارت یافت نشد</p>')
+    + '</div></div>';
+}
+
+function lessonDetailHtml(id) {
+  const l = DATA.lessons.find(x => x.id === id);
+  if (!l) return '<p class="center t14 muted" style="padding:2.5rem 0">درس یافت نشد</p>';
+  if (!l.isFree && !S.isPro) return proGateHtml();
+  const blk = (icon, tone, title, text) => '<section class="blk ' + tone + '" aria-label="' + title + '"><h3><span class="bicon ' + tone + '">' + ic(icon, 'xs') + '</span>' + title + '</h3><p>' + esc(text) + '</p></section>';
+  return '<article class="space3" aria-label="درس: ' + esc(l.title) + '" style="padding-bottom:1rem">'
+    + '<header class="p15" style="border-radius:1.5rem;background:var(--navy);color:#fff"><div class="rowb"><span style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;flex-shrink:0;border-radius:1rem;background:rgba(255,255,255,.1)">' + ic(l.icon, 'lg') + '</span><div class="grow"><h2 class="t14 eb" style="line-height:1.75rem">' + esc(l.title) + '</h2><p class="t11 lh5" style="margin-top:.25rem;color:rgba(255,255,255,.7)">' + esc(l.subtitle) + '</p></div></div></header>'
+    + blk('BookOpen', 'neutral', 'مقدمه', l.intro)
+    + '<section class="card pad" style="border-color:color-mix(in srgb,var(--primary) 40%,transparent)"><h3 class="row" style="gap:.5rem;margin-bottom:.5rem;font-size:.8125rem;font-weight:800;color:var(--primary)">' + ic('FileText','xs') + esc(l.sectionTitle) + '</h3><p class="t13 lh8" style="color:color-mix(in srgb,var(--foreground) 90%,transparent)">' + esc(l.text) + '</p></section>'
+    + blk('AlertTriangle', 'danger', 'هشدار خطر', l.alert)
+    + blk('Lightbulb', 'gold', 'نکته', l.note)
+    + blk('XCircle', 'warn', 'اشتباه رایج', l.mistake)
+    + blk('Target', 'action', 'اقدام فوری پیشنهادی', l.action)
+    + blk('Flag', 'summary', 'جمعبندی', l.summary)
+    + '</article>';
+}
+
+/* ═══════════ صفحه: ابزارها ═══════════ */
+function toolsHtml() {
+  return '<div class="space3">'
+    + '<div style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 50%,transparent);padding:.875rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">جعبه ابزارهای امنیتی پایه‌ای و پیشرفته — ' + fa(DATA.tools.length) + ' ابزار و پایشگر سیستم شامل سپر امنیتی طلایی، پنهان‌یاب و بازرس دسترسی‌ها. طراحی‌شده بر پایه الگوریتم‌های ممیزی آفلاین اندروید برای ردیابی دسترسی‌های خلاف ضوابط حریم شخصی.</div>'
+    + '<div class="toolgrid" id="tool-list">'
+    + DATA.tools.map((t, i) => {
+      const locked = t.isPro && !S.isPro;
+      return '<button class="card' + (t.id === 1 ? ' gold-glow' : '') + '" data-act="open-tool" data-route="' + t.route + '" style="position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:.5rem;padding:1rem;text-align:right;animation-delay:' + Math.min(i * 0.04, 0.5) + 's">'
+        + '<span class="row" style="width:100%;justify-content:space-between;align-items:center">'
+        + '<span style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;border-radius:1rem;' + (t.id === 1 ? 'background:var(--primary);color:var(--primary-foreground)' : 'background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)') + '">' + ic(t.icon, 'lg') + '</span>'
+        + (locked ? '<span style="display:flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:.75rem;background:var(--muted)">' + ic('Lock','xs') + '</span>' : t.id === 1 ? '<span class="badge-gold">' + ic('Zap','xxs') + 'پیشنهاد طلایی سیستم</span>' : '')
+        + '</span>'
+        + '<span class="t13 eb" style="line-height:1.5rem">' + esc(t.title) + '</span>'
+        + '<span class="t11 lh5 muted" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">' + esc(t.subtitle) + '</span>'
+        + '</button>';
+    }).join('')
+    + '</div></div>';
+}
+
+/* ═══════════ ۱) سپر طلایی ═══════════ */
+const shield = { scanning:false, steps:[], phase:0, result:null };
+async function runShieldScan() {
+  shield.scanning = true; shield.steps = []; shield.phase = 0; shield.result = null;
+  if (cur().name === 'tool' && cur().route === 'golden-shield') renderScreen();
+  for (let i = 0; i < SCAN_STEPS.length; i++) {
+    const st = stepStatus(SCAN_STEPS[i].id);
+    shield.steps.push(Object.assign({}, SCAN_STEPS[i], { status: st[0], statusLabel: st[1] }));
+    shield.phase = i + 1;
+    if (cur().name === 'tool' && cur().route === 'golden-shield') renderScreen();
+    await sleep(420 + Math.random() * 380);
+  }
+  const { score, issues } = computeSecurityFindings();
+  S.lastScanScore = score; saveState();
+  shield.result = { score, issues, message: score >= 90 ? 'گوشی شما در وضعیت عالی و کاملاً ایمن قرار دارد.' : score >= 70 ? 'پک حفاظتی عالی است، اما برخی آسیب‌پذیری‌های فرعی یافت شد.' : 'امنیت گوشی شما در معرض خطر است؛ پیشنهاد طلایی سیستم را اجرا کنید!' };
+  shield.scanning = false;
+  if (cur().name === 'tool' && cur().route === 'golden-shield') renderScreen();
+}
+function shieldHtml() {
+  const r = shield.result;
+  const C = 2 * Math.PI * 52;
+  const gaugeColor = !r ? '#71717a' : r.score >= 90 ? '#10b981' : r.score >= 70 ? '#f0b429' : '#ef4444';
+  let html = '<div class="space3">'
+    + '<div class="card center p15 gold-glow" style="border-color:color-mix(in srgb,var(--primary) 40%,transparent)">'
+    + '<div class="gauge"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--muted)" stroke-width="10"/>'
+    + (r ? '<circle cx="60" cy="60" r="52" fill="none" stroke="' + gaugeColor + '" stroke-width="10" stroke-linecap="round" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - r.score / 100)) + '" style="transition:stroke-dashoffset 1.1s ease-out"/>' : '')
+    + '</svg><div class="num"><b aria-live="polite">' + (r ? fa(r.score) + '٪' : shield.scanning ? '...' : '—') + '</b><span>امتیاز سلامت</span></div></div>'
+    + '<h2 class="t13 eb" style="margin-top:.5rem">سپر طلایی: اسکن زنده و پشتچر امنیتی گوشی</h2>'
+    + '<p class="t11 lh5 muted" style="margin-top:.25rem">بررسی چندوجهی و یکجای امنیت کل سیستم‌عامل شامل وضعیت روت، اشکال‌زدایی USB و لوکیشن‌های مجازی — این آزمون ۱۰۰٪ محلی بوده و هیچ داده‌ای از تلفن شما خارج نخواهد شد.</p>'
+    + '<button class="btn" data-act="shield-scan" style="margin-top:1rem;padding:1.15rem" ' + (shield.scanning ? 'disabled' : '') + '>' + (shield.scanning ? ic('Loader2','sm spin') : ic('Play','sm')) + (shield.scanning ? ' در حال اسکن عمیق...' : r ? 'تکرار مجدد اسکن' : 'شروع اسکن کامل سپر طلایی') + '</button>'
+    + '</div>';
+
+  if (shield.scanning || shield.steps.length) {
+    html += '<section class="card pad" aria-label="مراحل اسکن"><div class="row" style="justify-content:space-between;margin-bottom:.5rem"><h3 class="t13 eb">مراحل ممیزی زنده</h3><span class="t11 muted">مرحله ' + fa(shield.phase) + ' از ۹</span></div>'
+      + '<div class="pbar" style="height:.375rem;margin-bottom:.75rem"><i style="width:' + (shield.phase / 9 * 100) + '%;background:var(--primary);transition:width .4s"></i></div>'
+      + '<ul class="steplist space" style="list-style:none">'
+      + shield.steps.map(s => '<li style="animation:fadeSide .25s ease both"><span class="grow" style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(s.label) + '</span><span class="stbadge st-' + s.status + '">' + esc(s.statusLabel) + '</span></li>').join('')
+      + (shield.scanning ? '<li style="background:color-mix(in srgb,var(--primary) 10%,transparent);color:var(--primary);font-weight:700">' + ic('Loader2','xs spin') + 'در حال اسکن عمیق... مرحله ' + fa(shield.phase + 1) + '</li>' : '')
+      + '</ul></section>';
+  }
+
+  if (r) {
+    const mc = r.score >= 90 ? 'border-color:color-mix(in srgb,var(--emerald) 40%,transparent);background:color-mix(in srgb,var(--emerald) 10%,transparent);color:var(--emerald-dark)' : r.score >= 70 ? 'border-color:color-mix(in srgb,var(--primary) 40%,transparent);background:color-mix(in srgb,var(--primary) 10%,transparent);color:var(--primary)' : 'border-color:color-mix(in srgb,var(--destructive) 40%,transparent);background:color-mix(in srgb,var(--destructive) 10%,transparent);color:var(--destructive)';
+    html += '<section class="space3"><div class="card pad center t13 b" style="' + mc + '">نتیجه‌گیری و جمع‌بندی نهایی: ' + esc(r.message) + '</div>';
+    if (!r.issues.length) {
+      html += '<div class="card pad row" style="border-color:color-mix(in srgb,var(--emerald) 40%,transparent);background:color-mix(in srgb,var(--emerald) 10%,transparent)">' + ic('CheckCircle2','lg') + '<p class="t13 b" style="color:var(--emerald-dark)">هیچ مشکل امنیتی فعالی یافت نشد — عالی!</p></div>';
+    } else {
+      html += '<div class="space3"><h3 class="t13 eb" style="padding:0 .25rem">بررسی و پایش امنیتی — ' + fa(r.issues.length) + ' مورد</h3>';
+      const sevLabel = { critical:'بحرانی', high:'خطر', medium:'متوسط', low:'کم' };
+      html += r.issues.map(iss => '<div class="issue ' + iss.severity + '" style="animation:fadeUp .25s ease both"><div class="rowb" style="justify-content:space-between"><div class="grow"><p class="t125 eb" style="display:flex;flex-wrap:wrap;align-items:center;gap:.375rem">' + ic('ShieldAlert','xs') + esc(iss.title) + '<span class="tag" style="background:rgba(0,0,0,.1)">' + sevLabel[iss.severity] + '</span></p><p class="t11 lh6" style="margin-top:.25rem;color:color-mix(in srgb,var(--foreground) 80%,transparent)">' + esc(iss.detail) + '</p></div>'
+        + (iss.fixable && iss.fixAction ? '<button class="fixbtn" data-act="fix-issue" data-fix="' + iss.fixAction + '" data-id="' + iss.id + '">رفع مشکل</button>' : '')
+        + '</div></div>').join('');
+      html += '</div>';
+    }
+    html += '<div class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.875rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)"><b>' + ic('Info','xxs') + '</b> پیشنهاد طلایی سیستم: پس از رفع هر مورد، دکمه «تکرار مجدد اسکن» را بزنید تا امتیاز مصونیت دفاعی به‌روز شود. خاموش کردن کیلاگرها، شنودکننده‌های صوتی و برنامه‌های جاسوسی فعال شده از اهداف اصلی این سپر است.</div></section>';
+  }
+  return html + '</div>';
+}
+
+/* ═══════════ ابزارهای لیست برنامه‌ها ═══════════ */
+const toolState = { hidden:{scanning:false,apps:null}, recent:{scanning:false,apps:null}, special:{scanning:false,apps:null}, perm:{scanning:false,apps:null,tab:'sms'}, all:{q:''} };
+
+function hiddenAppsHtml() {
+  const t = toolState.hidden;
+  let html = scanIntroHtml('مخفی‌یاب برنامه‌ها (اسکنر)', 'بسیاری از تروجان‌های تبلیغاتی یا جاسوس‌افزارها آیکون اجرای خود را در منوی اصلی مخفی می‌کنند تا شما نتوانید آن‌ها را ببینید. این اسکنر برنامه‌های نصب‌شده توسط کاربر که فاقد آیکون شلیک‌کننده (پرتابگر) هستند را فهرست می‌کند.', t.scanning, t.apps === null ? null : t.apps.length);
+  if (t.apps) {
+    html += '<div class="space3" style="animation:fadeUp .3s ease both">'
+      + '<div class="card pad center t13 eb" style="' + (t.apps.length ? 'border-color:color-mix(in srgb,var(--destructive) 40%,transparent);background:color-mix(in srgb,var(--destructive) 10%,transparent);color:var(--destructive)' : 'border-color:color-mix(in srgb,var(--emerald) 40%,transparent);background:color-mix(in srgb,var(--emerald) 10%,transparent);color:var(--emerald-dark)') + '">'
+      + (t.apps.length ? 'برنامه‌های پنهان بدون آیکون یافت‌شده (' + fa(t.apps.length) + ') — به احتمال زیاد جاسوس‌افزار هستند!' : 'هیچ برنامه مخفی بدون آیکونی یافت نشد — دستگاه پاکیزه است.') + '</div>'
+      + t.apps.map(a => appRowHtml(a, '<span class="row" style="gap:.25rem;flex-shrink:0;border-radius:.75rem;background:color-mix(in srgb,var(--destructive) 15%,transparent);padding:.375rem .625rem;font-size:.625rem;font-weight:700;color:var(--destructive)">' + ic('EyeOff','xxs') + 'پنهان</span>')).join('')
+      + (t.apps.length ? '<div class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.875rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">پیشنهاد: اگر این برنامه‌ها را نشناختید، بلافاصله حذف نصب کنید و پس از آن، رمز عبور حساب‌های اصلی خود را تغییر دهید.</div>' : '')
+      + '</div>';
+  }
+  return '<div class="space3">' + html + '</div>';
+}
+
+function recentAppsHtml() {
+  const t = toolState.recent;
+  let html = scanIntroHtml('برنامه‌های تازه نصب شده', 'بسیاری از بدافزارها بلافاصله پس از نصب پنهان می‌شوند. در این ابزار می‌توانید برنامه‌هایی را که جدیداً روی گوشی ریخته شده‌اند، بر اساس زمان نصب به صورت نزولی ببینید تا اپ جدید مخرب را فوراً شناسایی کنید.', t.scanning, t.apps === null ? null : t.apps.length);
+  if (t.apps) {
+    html += '<div class="space3" style="animation:fadeUp .3s ease both"><p class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">در لیست زیر برنامه‌ها بر اساس جدیدترین زمان نصب چیده شده‌اند تا بدافزارهای جاسوسی تازه نصب شده را پایش کنید.</p>'
+      + t.apps.map(a => appRowHtml(a, '<span style="display:flex;flex-direction:column;align-items:flex-start;gap:.125rem;flex-shrink:0"><span class="row" style="gap:.25rem;border-radius:.5rem;background:var(--muted);padding:.25rem .5rem;font-size:.5625rem;color:var(--muted-foreground)">' + ic('CalendarDays','xxs') + 'تاریخ نصب: ' + faDate(a.installDate) + '</span>' + (a.isSuspicious ? '<span class="tag bad" style="border-radius:.5rem">مشکوک</span>' : '') + '</span>')).join('')
+      + '</div>';
+  }
+  return '<div class="space3">' + html + '</div>';
+}
+
+function specialAccessHtml(cfgKey) {
+  const cfg = SPECIAL_CONFIGS[cfgKey];
+  const t = toolState.special;
+  let html = scanIntroHtml(cfg.title, esc(cfg.desc) + ' — ' + esc(cfg.warn), t.scanning, t.apps === null ? null : t.apps.length);
+  if (t.apps) {
+    html += '<div class="space3" style="animation:fadeUp .3s ease both">'
+      + (t.apps.length === 0 ? '<p class="card pad center t12 b" style="border-color:color-mix(in srgb,var(--emerald) 40%,transparent);background:color-mix(in srgb,var(--emerald) 10%,transparent);color:var(--emerald-dark)">هیچ برنامه فعالی در این بخش یافت نشد — دستگاه شما پاکیزه است!</p>' : t.apps.map(a => appRowHtml(a)).join(''))
+      + '<div class="card" style="border-radius:1rem;border-color:color-mix(in srgb,var(--primary) 30%,transparent);background:color-mix(in srgb,var(--primary) 5%,transparent);padding:.875rem;font-size:.6875rem;line-height:1.5rem"><p class="eb" style="color:var(--primary)">' + cfg.warnTitle + '</p><p class="lh6" style="margin-top:.25rem;color:color-mix(in srgb,var(--foreground) 80%,transparent)">' + cfg.extra + '</p></div>'
+      + '</div>';
+  }
+  return '<div class="space3">' + html + '</div>';
+}
+
+function sensitivePermsHtml() {
+  const t = toolState.perm;
+  let html = '<div class="card center p15"><span style="display:flex;align-items:center;justify-content:center;width:3.5rem;height:3.5rem;margin:0 auto;border-radius:1rem;background:color-mix(in srgb,var(--primary) 12%,transparent)">' + ic('Search','xl') + '</span>'
+    + '<h2 class="t13 eb" style="margin-top:.75rem">کاوشگر دسترسی‌های حساس برنامه‌ها</h2>'
+    + '<p class="t11 lh6 muted" style="margin-top:.375rem">بررسی اینکه چه تعداد برنامه در حال حاضر به پیامک‌های شما، اطلاعات مکانی زنده، دوربین و مخاطبان دسترسی تام دارند. با لمس هر ردیف، برنامه‌ها را مشاهده و لغو دسترسی کنید.</p>'
+    + '<button class="btn" data-act="perm-scan" style="margin-top:1rem">' + (t.scanning ? ic('Loader2','sm spin') : ic('Play','sm')) + (t.scanning ? ' در حال اسکن عمیق...' : 'شروع اسکن دسترسی‌های بحرانی') + '</button></div>';
+  if (t.apps !== null) {
+    html += '<div class="row" style="gap:.375rem;overflow-x:auto;padding-bottom:.25rem">'
+      + ['sms','gps','camera','contacts','mic'].map(p => '<button class="permtab ' + (t.tab === p ? 'on' : '') + '" role="tab" aria-selected="' + (t.tab === p) + '" data-act="perm-tab" data-perm="' + p + '">' + ic(PERM_META[p].icon, 'xs') + PERM_META[p].label + '</button>').join('')
+      + '</div><div class="space3" style="animation:fadeUp .3s ease both">';
+    if (t.apps.length === 0) {
+      html += '<p class="card pad center t12 b" style="border-color:color-mix(in srgb,var(--emerald) 40%,transparent);background:color-mix(in srgb,var(--emerald) 10%,transparent);color:var(--emerald-dark)">هیچ برنامه‌ای دسترسی ' + PERM_META[t.tab].label + ' ندارد — عالی!</p>';
+    } else {
+      html += '<p class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">' + fa(t.apps.length) + ' برنامه به ' + PERM_META[t.tab].label + ' دسترسی دارد. دسترسی‌های حساس نظیر خواندن پیامک، ردیابی زنده مکان، دوربین و ضبط صدا نباید به برنامه‌های پیش‌پا افتاده داده شود.</p>'
+        + t.apps.map(a => appRowHtml(a)).join('');
+    }
+    html += '</div>';
+  }
+  return '<div class="space3">' + html + '</div>';
+}
+
+function allAppsHtml() {
+  const q = toolState.all.q.trim().toLowerCase();
+  const filtered = !q ? S.apps : S.apps.filter(a => a.name.toLowerCase().includes(q) || a.packageName.toLowerCase().includes(q));
+  return '<div class="space3">'
+    + '<div style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 50%,transparent);padding:.875rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">مشاهده لیست تمام برنامه‌ها به همراه نام بسته و تاریخ نصب برای یافتن برنامه‌های مخرب پنهان — شناسایی برنامه‌های پنهان کاربردی و بررسی وضعیت مجوز اپلیکیشن.</div>'
+    + '<div style="position:relative"><span style="position:absolute;right:.75rem;top:50%;transform:translateY(-50%);color:var(--muted-foreground);display:flex">' + ic('Search','sm') + '</span>'
+    + '<input id="apps-q" data-act="apps-search" type="text" value="' + esc(toolState.all.q) + '" placeholder="جستجو میان نام برنامه‌ها یا نام بسته‌ها..." aria-label="جستجوی برنامه‌ها" style="width:100%;height:2.75rem;border-radius:1rem;border:1px solid var(--border);background:var(--card);color:var(--foreground);padding:0 2.25rem 0 1rem;font-size:.8125rem;outline:none"></div>'
+    + '<p class="t11 muted">وضعیت فیلتر: ' + fa(filtered.length) + ' برنامه یافت شد</p>'
+    + '<div class="space3" style="max-height:60vh;overflow-y:auto;padding-left:.25rem">'
+    + (filtered.length ? filtered.map(a => appRowHtml(a, '<span class="row" style="gap:.25rem;flex-shrink:0;border-radius:.5rem;background:var(--muted);padding:.25rem .5rem;font-size:.5625rem;color:var(--muted-foreground)">' + ic('CalendarDays','xxs') + faDate(a.installDate) + '</span>')).join('') : '<p class="center t14 muted" style="padding:2rem 0">برنامه‌ای یافت نشد</p>')
+    + '</div></div>';
+}
+
+/* ═══════════ ۹) تولید رمز عبور ═══════════ */
+const UPPER = 'ABCDEFGHJKLMNPQRSTUVWXYZ', LOWER = 'abcdefghijkmnopqrstuvwxyz', DIGITS = '23456789', SYMBOLS = '!@#$%^&*_+-=?';
+function generatePassword(length, useUpper, useDigits, useSymbols) {
+  let pool = LOWER;
+  const guaranteed = [LOWER[Math.floor(Math.random() * LOWER.length)]];
+  if (useUpper) { pool += UPPER; guaranteed.push(UPPER[Math.floor(Math.random() * UPPER.length)]); }
+  if (useDigits) { pool += DIGITS; guaranteed.push(DIGITS[Math.floor(Math.random() * DIGITS.length)]); }
+  if (useSymbols) { pool += SYMBOLS; guaranteed.push(SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]); }
+  const rest = length - guaranteed.length;
+  const all = [...guaranteed, ...Array.from({ length: Math.max(0, rest) }, () => pool[Math.floor(Math.random() * pool.length)])];
+  for (let i = all.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [all[i], all[j]] = [all[j], all[i]]; }
+  return all.join('');
+}
+function crackTimeText(seconds) {
+  if (seconds < 1) return 'کمتر از ۱ ثانیه';
+  if (seconds < 60) return fa(Math.round(seconds)) + ' ثانیه';
+  if (seconds < 3600) return fa(Math.round(seconds / 60)) + ' دقیقه';
+  if (seconds < 86400) return fa(Math.round(seconds / 3600)) + ' ساعت';
+  if (seconds < 2592000) return fa(Math.round(seconds / 86400)) + ' روز';
+  if (seconds < 31536000) return fa(Math.round(seconds / 2592000)) + ' ماه';
+  const years = seconds / 31536000;
+  if (years > 1e12) return 'بیش از ' + fa1(years / 1e12) + ' تریلیون سال';
+  if (years > 1e9) return fa1(years / 1e9) + ' میلیارد سال';
+  if (years > 1e6) return fa1(years / 1e6) + ' میلیون سال';
+  return fa(Math.round(years)) + ' سال';
+}
+const pwGen = { length:16, upper:true, digits:true, symbols:true, pw:'', copied:false };
+function pwGenHtml() {
+  if (!pwGen.pw) pwGen.pw = generatePassword(pwGen.length, pwGen.upper, pwGen.digits, pwGen.symbols);
+  const poolSize = 26 + (pwGen.upper ? 24 : 0) + (pwGen.digits ? 8 : 0) + (pwGen.symbols ? 13 : 0);
+  const entropy = pwGen.length * Math.log2(poolSize || 26);
+  const seconds = Math.pow(2, entropy) / 1e10;
+  const strength = entropy < 40 ? { label:'خیلی ضعیف', color:'var(--destructive)', bg:'var(--destructive)' } : entropy < 60 ? { label:'متوسط', color:'var(--amber)', bg:'var(--amber)' } : entropy < 80 ? { label:'قوی', color:'var(--emerald)', bg:'var(--emerald)' } : { label:'فوق‌العاده قوی', color:'var(--emerald-dark)', bg:'var(--emerald-dark)' };
+  const fill = ((pwGen.length - 8) / 32 * 100).toFixed(1);
+  return '<div class="space3"><div class="card center p15">'
+    + '<h2 class="t13 eb">ساخت رمز عبور قوی</h2>'
+    + '<p class="t11 lh6 muted" style="margin-top:.25rem">تولید پسوردهای تصادفی بسیار پیچیده و ایمن بر اساس طول و کاراکترهای دلخواه شما — اصول ریاضی و تجربی در طراحی پسوردهایی که زاییده ذهن هکرها و کامپیوترها نیست.</p>'
+    + '<div class="pwbox" style="margin-top:1rem"><code id="pw-text">' + esc(pwGen.pw) + '</code>'
+    + '<button class="iconbtn" data-act="pw-copy" aria-label="کپی رمز عبور" style="background:rgba(255,255,255,.1)">' + (pwGen.copied ? ic('CheckCircle2','sm') : ic('Copy','sm')) + '</button></div>'
+    + '<div class="row" style="justify-content:space-between;margin-top:.5rem;font-size:.6875rem"><span class="muted">قدرت تخمینی:</span><span class="row" style="gap:.5rem"><span class="eb" style="color:' + strength.color + '">' + strength.label + '</span><span class="dot" style="background:' + strength.bg + '"></span></span></div>'
+    + '<p class="t105 muted" style="margin-top:.25rem;text-align:right">زمان لازم برای کشف رمز توسط کامپیوتر هکر: <span class="b" style="color:var(--foreground)">' + crackTimeText(seconds) + '</span></p>'
+    + '<div style="margin-top:1.25rem" class="space">'
+    + '<div><div class="row" style="justify-content:space-between;margin-bottom:.5rem;font-size:.75rem;font-weight:700"><span>طول رمز عبور:</span><span style="border-radius:.5rem;background:color-mix(in srgb,var(--primary) 15%,transparent);padding:.25rem .625rem;color:var(--primary)">' + fa(pwGen.length) + ' کاراکتر</span></div>'
+    + '<input type="range" min="8" max="40" step="1" value="' + pwGen.length + '" data-act="pw-length" aria-label="طول رمز عبور" style="--fill:' + fill + '%"></div>'
+    + '<div class="space3">'
+    + ['upper|شامل حروف بزرگ انگلیسی (A-Z)', 'digits|شامل اعداد ریاضی (0-9)', 'symbols|شامل نشانه‌های ویژه (!@#$)'].map(x => { const [k, label] = x.split('|'); return '<label class="rowb t12 b" style="align-items:center;cursor:pointer" data-act="pw-toggle" data-key="' + k + '"><span class="cb ' + (pwGen[k] ? 'on' : '') + '">' + ic('Check','xxs') + '</span>' + label + '</label>'; }).join('')
+    + '</div>'
+    + '<div class="row" style="gap:.5rem;margin-top:.5rem"><button class="btn" data-act="pw-gen" style="padding:1.15rem">' + ic('RotateCcw','sm') + 'تولید مجدد</button><button class="btn sec" data-act="pw-copy" style="padding:1.15rem;flex:0 0 auto">کپی رمز عبور</button></div>'
+    + '</div></div>'
+    + '<div class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.875rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)"><b>' + ic('Info','xxs') + '</b> این ابزار به صورت کاملاً آفلاین و تصادفی عمل می‌کند؛ هیچ رمزی ذخیره یا منتقل نمی‌شود. یک رمز فولادین حداقل باید دارای ۱۲ کاراکتر ترکیبی باشد.</div></div>';
+}
+
+/* ═══════════ ۱۰) سنجش قدرت رمز ═══════════ */
+let pwStrength = '';
+function analyzePassword(pw) {
+  if (!pw) return null;
+  let pool = 0;
+  if (/[a-z]/.test(pw)) pool += 26;
+  if (/[A-Z]/.test(pw)) pool += 26;
+  if (/[0-9]/.test(pw)) pool += 10;
+  if (/[^a-zA-Z0-9]/.test(pw)) pool += 33;
+  const entropy = pw.length * Math.log2(pool || 1);
+  const seconds = Math.pow(2, entropy) / 1e10;
+  const commonPatterns = [
+    { re:/^(123456|password|111111|000000|admin|qwerty|abc123|iloveyou)/i, msg:'شروع با الگوی فوق‌متداول هک‌شده' },
+    { re:/^(ali|mohammad|reza|hossein|mehdi|sara|zahra|fatemeh)/i, msg:'شروع با اسم‌های رایج فارسی' },
+    { re:/13[0-9]{2}$|1[3-9][0-9]{2}$/, msg:'پایان با سال تولد شمسی' },
+    { re:/(0123|1234|5678|abcd|aaaa|bbbb)/i, msg:'توالی منطقی قابل حدس' },
+    { re:/(^[a-z]+$|^[A-Z]+$|^[0-9]+$)/, msg:'فقط یک نوع کاراکتر استفاده شده' },
+    { re:/(^.{1,6}$)/, msg:'طول رمز بسیار کوتاه است (زیر ۷ کاراکتر)' },
+  ];
+  const hits = commonPatterns.filter(p => p.re.test(pw)).map(p => p.msg);
+  const suggestions = [];
+  if (pw.length < 12) suggestions.push('طول رمز را به ۱۲ کاراکتر یا بیشتر افزایش دهید');
+  if (!/[A-Z]/.test(pw)) suggestions.push('حرف بزرگ انگلیسی اضافه کنید');
+  if (!/[0-9]/.test(pw)) suggestions.push('عدد اضافه کنید');
+  if (!/[^a-zA-Z0-9]/.test(pw)) suggestions.push('کاراکترهای خاص (!, @, #) اضافه کنید');
+  let level = 0;
+  if (entropy >= 100 && hits.length === 0) level = 4;
+  else if (entropy >= 75 && hits.length <= 1) level = 3;
+  else if (entropy >= 55) level = 2;
+  else if (entropy >= 35) level = 1;
+  const levels = [
+    { label:'خیلی ضعیف', color:'var(--destructive)', bar:'var(--destructive)', pct:15 },
+    { label:'ضعیف', color:'var(--orange)', bar:'var(--orange)', pct:32 },
+    { label:'متوسط', color:'var(--amber)', bar:'var(--amber)', pct:55 },
+    { label:'قوی', color:'var(--emerald)', bar:'var(--emerald)', pct:78 },
+    { label:'فوق‌العاده قوی (فولادین)', color:'var(--emerald-dark)', bar:'var(--emerald-dark)', pct:100 },
+  ];
+  const msgs = [
+    'این رمز عبور در چند ثانیه توسط ابزارهای هکری شکسته می‌شود. سریعاً آن را ارتقا دهید.',
+    'ضعیف است. سعی کنید کاراکترهای خاص (!, @, #) یا حرف بزرگ انگلیسی اضافه کنید.',
+    'شرایط خوبی دارد، ولی اضافه کردن طول رمز می‌تواند آن را بسیار نفوذناپذیرتر کند.',
+    'قدرت رمز شما عالی است؛ با افزایش چند کاراکتر به سطح فولادین می‌رسد.',
+    'فولادین! زمان تخمینی برای کشف این رمز عبور توسط مقتدرترین کامپیوترها خارق‌العاده است.',
+  ];
+  return Object.assign({ entropy, seconds, hits, suggestions, level, msg: msgs[level] }, levels[level]);
+}
+function pwStrengthHtml() {
+  const a = analyzePassword(pwStrength);
+  return '<div class="space3"><div class="card p15">'
+    + '<h2 class="t13 eb center">تخمین قدرت رمز عبور</h2>'
+    + '<p class="t11 lh6 muted center" style="margin-top:.25rem">پسورد دلخواه خود را در این ابزار وارد کنید تا سیستم به صورت دقیق قدرت آن را تخمین بزند. همچنین بررسی می‌کند که آیا فرمول‌های هکری به راحتی آن را کشف می‌کنند یا خیر — ۱۰۰٪ محلی و آفلاین.</p>'
+    + '<input id="ps-input" data-act="ps-input" type="text" value="' + esc(pwStrength) + '" placeholder="رمز عبور خود را این‌جا تایپ کنید..." dir="ltr" aria-label="رمز عبور برای تحلیل" style="width:100%;height:3rem;margin-top:1rem;border-radius:1rem;border:1px solid var(--border);background:var(--background);color:var(--foreground);padding:0 1rem;font-size:.8125rem;text-align:left;font-family:ui-monospace,monospace;outline:none">'
+    + (a ? '<div class="space3" style="margin-top:1rem;animation:fadeUp .3s ease both">'
+      + '<div><div class="row" style="justify-content:space-between;margin-bottom:.375rem;font-size:.75rem"><span class="b muted">قدرت تخمینی:</span><span class="eb" style="color:' + a.color + '">' + a.label + '</span></div>'
+      + '<div class="hbar"><i style="width:' + a.pct + '%;background:' + a.bar + '"></i></div></div>'
+      + '<p class="card t12 b lh6" style="border-radius:1rem;padding:.875rem;' + (a.level <= 1 ? 'background:color-mix(in srgb,var(--destructive) 10%,transparent);color:var(--destructive)' : a.level === 2 ? 'background:color-mix(in srgb,var(--amber) 10%,transparent);color:var(--amber-dark)' : 'background:color-mix(in srgb,var(--emerald) 10%,transparent);color:var(--emerald-dark)') + '">' + a.msg + '</p>'
+      + '<div class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.875rem;font-size:.6875rem;line-height:1.5rem"><p class="b">زمان لازم برای کشف رمز توسط کامپیوتر هکر:</p><p class="t14 eb" style="margin-top:.25rem;color:var(--primary)">' + crackTimeText(a.seconds) + '</p><p class="muted" style="margin-top:.25rem">آنتروپی محاسبه‌شده: ' + fa(Math.round(a.entropy)) + ' بیت</p></div>'
+      + (a.hits.length ? '<div class="card" style="border-radius:1rem;border-color:color-mix(in srgb,var(--destructive) 35%,transparent);background:color-mix(in srgb,var(--destructive) 8%,transparent);padding:.875rem"><p class="t12 eb" style="display:flex;align-items:center;gap:.375rem;color:var(--destructive)">' + ic('XCircle','xs') + ' الگوهای کشف‌شده توسط فرمول‌های هکری:</p><ul style="margin-top:.375rem;padding-right:1rem;font-size:.6875rem;line-height:1.5rem;color:color-mix(in srgb,var(--foreground) 85%,transparent)">' + a.hits.map(h => '<li style="list-style:disc">• ' + h + '</li>').join('') + '</ul></div>' : '')
+      + (a.suggestions.length ? '<div class="card" style="border-radius:1rem;border-color:color-mix(in srgb,var(--primary) 35%,transparent);background:color-mix(in srgb,var(--primary) 8%,transparent);padding:.875rem"><p class="t12 eb" style="display:flex;align-items:center;gap:.375rem;color:var(--primary)">' + ic('Lightbulb','xs') + ' پیشنهاد طلایی سیستم:</p><ul style="margin-top:.375rem;padding-right:1rem;font-size:.6875rem;line-height:1.5rem;color:color-mix(in srgb,var(--foreground) 85%,transparent)">' + a.suggestions.map(s => '<li style="list-style:disc">• ' + s + '</li>').join('') + '</ul></div>' : '')
+      + '</div>' : '')
+    + '</div>'
+    + '<div class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.875rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">انتخاب رمزهایی مثل «123456» یا «Ali1380» شبیه به بستن در خانه با فویل آلومینیومی است! طولانی بودن رمز عبور اثر تصاعدی بیشتری روی افزایش امنیت آن دارد تا استفاده بی‌شمار از نمادهای عجیب.</div></div>';
+}
+
+/* ═══════════ ۱۱) میانبرهای طلایی ═══════════ */
+let openShortcut = null;
+function shortcutsHtml() {
+  return '<div class="space3">'
+    + '<div style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 50%,transparent);padding:.875rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">مرکز میانبرهای طلایی امنیت اندروید — سیستم عامل اندروید برای تسریع امور کاربران درگاه‌های امنیتی متعددی دارد که معمولاً در تنظیمات پیچیده پیدا کردنشان دشوار است. این پورتال ۱۳ میانبر حیاتی را یکجا در دسترس شما قرار می‌دهد؛ روی هر مورد بزنید تا راهنمای گام‌به‌گام را ببینید.</div>'
+    + DATA.shortcuts.map((s, i) => {
+      const isOpen = openShortcut === s.id;
+      return '<div style="animation:fadeUp .3s ease both;animation-delay:' + Math.min(i * 0.03, 0.3) + 's">'
+        + '<button class="card" style="display:flex;align-items:center;gap:.75rem;width:100%;padding:.875rem;text-align:right" data-act="toggle-shortcut" data-id="' + s.id + '" aria-expanded="' + isOpen + '">'
+        + '<span style="display:flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;flex-shrink:0;border-radius:.75rem;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)">' + ic(s.icon, 'sm') + '</span>'
+        + '<span class="grow"><span class="t13 eb" style="display:block">' + esc(s.title) + '</span><span class="t105 muted" style="display:block;margin-top:.125rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(s.desc) + '</span></span>'
+        + '<span style="transition:transform .2s;display:flex;color:var(--muted-foreground);transform:rotate(' + (isOpen ? '-90' : '0') + 'deg)">' + ic('ChevronLeft','xs') + '</span></button>'
+        + (isOpen ? '<ol class="space3" style="margin:.375rem .75rem 0;border-radius:1rem;border:1px solid color-mix(in srgb,var(--primary) 30%,transparent);background:color-mix(in srgb,var(--primary) 5%,transparent);padding:1rem;list-style:none">'
+          + s.steps.split('\n').map((step, j) => '<li class="rowb t12 lh6"><span class="stepnum">' + fa(j + 1) + '</span><span>' + esc(step) + '</span></li>').join('')
+          + '</ol>' : '')
+        + '</div>';
+    }).join('')
+    + '</div>';
+}
+
+/* ═══════════ ۱۲) چک‌لیست ═══════════ */
+let checklist = [];
+try { checklist = JSON.parse(localStorage.getItem(LS.checklist) || '[]'); } catch(e) { checklist = []; }
+function saveChecklist() { try { localStorage.setItem(LS.checklist, JSON.stringify(checklist)); } catch(e){} }
+function checklistHtml() {
+  const pct = Math.round((checklist.length / DATA.checklist.length) * 100);
+  return '<div class="space3"><div class="card p15">'
+    + '<div class="rowb" style="justify-content:space-between;align-items:flex-start"><div><h2 class="t13 eb">شناسنامه پدافند: چک‌لیست طلایی دفاع سایبری</h2><p class="t11 lh6 muted" style="margin-top:.25rem">این چک لیست ارکان پایه دفاع شخصی شما در برابر هک، نفوذ فیشینگ و مهندسی اجتماعی را تشکیل می‌دهد.</p></div>'
+    + '<button class="iconbtn" data-act="checklist-reset" aria-label="بازنشانی چک‌لیست">' + ic('Trash2','xs') + '</button></div>'
+    + '<div style="margin-top:1rem"><div class="row" style="justify-content:space-between;margin-bottom:.375rem;font-size:.6875rem"><span class="b muted">میزان تکمیل اقدامات:</span><span class="eb" style="color:var(--primary)">' + fa(checklist.length) + ' از ' + fa(DATA.checklist.length) + ' — ' + fa(pct) + '٪</span></div>'
+    + '<div class="pbar"><i style="width:' + pct + '%;background:var(--primary)"></i></div></div></div>'
+    + '<div class="space3">'
+    + DATA.checklist.map(item => {
+      const done = checklist.includes(item.id);
+      return '<label class="card" style="display:flex;cursor:pointer;align-items:flex-start;gap:.75rem;padding:.875rem;border-color:' + (done ? 'color-mix(in srgb,var(--emerald) 40%,transparent)' : 'var(--border)') + ';background:' + (done ? 'color-mix(in srgb,var(--emerald) 8%,transparent)' : 'var(--card)') + ';animation:fadeUp .3s ease both" data-act="check-toggle" data-id="' + item.id + '">'
+        + '<span class="cb ' + (done ? 'on' : '') + '" style="margin-top:.125rem">' + ic('Check','xxs') + '</span>'
+        + '<span class="grow"><span class="row" style="gap:.375rem;font-size:.78125rem;font-weight:800;' + (done ? 'color:var(--emerald-dark);text-decoration:line-through;opacity:.8' : '') + '">' + ic(item.icon, 'xs') + esc(item.title) + '</span>'
+        + '<span class="t11 lh6 muted" style="display:block;margin-top:.25rem">' + esc(item.desc) + '</span></span></label>';
+    }).join('')
+    + '</div>'
+    + (pct === 100 ? '<div class="card center" style="border-color:color-mix(in srgb,var(--emerald) 40%,transparent);background:color-mix(in srgb,var(--emerald) 10%,transparent);padding:1.25rem;animation:fadeUp .3s ease both">' + ic('CheckCircle2','xl') + '<p class="t14 eb" style="margin-top:.5rem;color:var(--emerald-dark)">تبریک! تمام اقدامات پدافندی انجام شد — شما اکنون یک دژ نفوذناپذیر دارید.</p></div>' : '')
+    + '</div>';
+}
+
+/* ═══════════ پیکربندی ۴ ابزار دسترسی خاص ═══════════ */
+const SPECIAL_CONFIGS = {
+  'device-admin': {
+    key:'device-admin', title:'بررسی برنامه‌های مدیر دستگاه',
+    desc:'شناسایی برنامه‌هایی که مجوزهای مدیریتی کامل (Device Administrator) دارند', icon:'Crown', filter:'admin',
+    warnTitle:'هشدار جدی حریم خصوصی:',
+    warn:'برنامه‌های دارای مجوز Device Admin می‌توانند به‌طور کامل قفل صفحه را تغییر دهند، داده‌ها را پاک کنند یا مانع از حذف نصب خود شوند. بدافزارهای جاسوسی پیشرفته اغلب این دسترسی را به روش فریبکارانه فعال می‌کنند تا از حذف خود جلوگیری نمایند.',
+    extra:'به جز برنامه‌های شناخته‌شده سیستمی (مانند یافتن دستگاه من یا برنامه‌های امنیتی معتبر گوگل)، دسترسی بقیه را بلافاصله لغو کنید. مدیریت دسترسی ادمین در تنظیمات گوشی: Security -> Device admin apps',
+  },
+  'accessibility': {
+    key:'accessibility', title:'پایشگر دسترسی دستیار صوتی و حرکتی (Accessibility)',
+    desc:'اسکن زنده Accessibility Service فعال‌شده مزاحم', icon:'PersonStanding', filter:'accessibility',
+    warnTitle:'هشدار بسیار حیاتی:',
+    warn:'قابلیت دسترسی (Accessibility) خطرناک‌ترین مجوز اندروید است! برنامه‌ای که این دسترسی را دارد می‌تواند محتوای تمام صفحه‌ها (شامل رمزهای عبور، تلگرام، واتساپ) را بخواند، کلیک‌های شما را ثبت کند و مخفیانه کارهای دیگر انجام دهد.',
+    extra:'هیچگاه به برنامه‌ای که به آن ایمان ۱۰۰٪ ندارید اجازه دسترسی راحت تسهیلات را صادر نکنید. تنها به ابزارهای موردنیاز واقعی خود نظیر نقشه‌ها یا دستیارها این دسترسی را ارائه دهید.',
+  },
+  'overlay': {
+    key:'overlay', title:'بررسی برنامه‌های دارای Overlay',
+    desc:'ردیابی برنامه‌هایی که توانایی ترسیم روی صفحه نمایشگر (Draw over other apps) دارند', icon:'Layers', filter:'overlay',
+    warnTitle:'نشانگان خطر فیشینگ لایه‌ای:',
+    warn:'قابلیت اورلی یا ترسیم روی سایر صفحات توسط برنامه‌های مخرب برای شبیه‌سازی درگاه‌های بانکی روی درگاه واقعی به کار می‌رود تا با لمس شما، اطلاعات کارت و رمزها را بربایند.',
+    extra:'بستن کامل یا مسدودسازی برنامه‌های حباب شناور نامعلوم (Overlay) از تنظیمات: Special app access -> Display over other apps',
+  },
+  'usage-stats': {
+    key:'usage-stats', title:'بررسی دسترسی آمار استفاده (Usage Stats)',
+    desc:'پایش اپلیکیشن‌هایی که آمار زمان استفاده شما از سایر برنامه‌ها را جمع‌آوری می‌کنند', icon:'BarChart3', filter:'usage',
+    warnTitle:'نقض حریم خصوصی:',
+    warn:'دسترسی به آمار استفاده (Usage Statistics)، به برنامه‌ها اجازه می‌دهد زمان باز و بسته شدن تک‌تک اپلیکیشن‌های گوشی شما را ثبت کنند که نقض حریم خصوصی است.',
+    extra:'برنامه‌های مانیتورینگ والدین و نرم‌افزارهای تجسس شرکتی به‌طور فشرده از این قابلیت استفاده می‌کنند تا کاربر را زیر نظر بگیرند. ویرایش مجوز دسترسی به داده کاربری: Special app access -> Usage access',
+  },
+};
+
+/* ═══════════ روتر ابزارها ═══════════ */
+const TOOL_PRO = { 'golden-shield':false, 'hidden-apps':false, 'recent-apps':false, 'sensitive-permissions':true, 'device-admin':true, 'accessibility':true, 'overlay':true, 'usage-stats':true, 'password-generator':false, 'password-strength':false, 'shortcuts':false, 'checklist':false, 'all-apps':true };
+
+function toolHtml(route) {
+  if (!(route in TOOL_PRO)) return '<p class="center t14 muted" style="padding:2.5rem 0">ابزار مورد نظر هنوز توسعه نیافته است.</p>';
+  if (TOOL_PRO[route] && !S.isPro) return proGateHtml();
+  switch (route) {
+    case 'golden-shield': return shieldHtml();
+    case 'hidden-apps': return hiddenAppsHtml();
+    case 'recent-apps': return recentAppsHtml();
+    case 'sensitive-permissions': return sensitivePermsHtml();
+    case 'device-admin': case 'accessibility': case 'overlay': case 'usage-stats': return specialAccessHtml(route);
+    case 'password-generator': return pwGenHtml();
+    case 'password-strength': return pwStrengthHtml();
+    case 'shortcuts': return shortcutsHtml();
+    case 'checklist': return checklistHtml();
+    case 'all-apps': return allAppsHtml();
+    default: return '';
+  }
+}
+
+/* ═══════════ صفحه: پرو (روش مایکت) ═══════════ */
+const PRO_FEATURES = [
+  { icon:'BookOpen', title:'بازگشایی کل ۲۰ مبحث تفصیلی رفع هک اکانت‌ها', desc:'اینستاگرام، تلگرام، واتساپ، جیمیل، روبیکا، ایتا، شاد، حساب گوگل و...' },
+  { icon:'Wrench', title:'۱۳ ابزار و پایشگر سیستم', desc:'شامل سپر امنیتی طلایی، پنهان‌یاب و بازرس دسترسی‌ها' },
+  { icon:'ShieldCheck', title:'اسکن کامل سپر طلایی', desc:'بررسی چندوجهی امنیت سیستم‌عامل و رفع خودکار مسائل' },
+  { icon:'BadgeCheck', title:'دسترسی نامحدود و مادام‌العمر', desc:'از دسترسی کاملاً نامحدود و امن لذت ببرید' },
+];
+const proState = { buying:false, buyStep:0 };
+async function simulateMyket() {
+  proState.buying = true; proState.buyStep = 0;
+  if (cur().name === 'pro') renderScreen();
+  const steps = ['اتصال به مایکت موفق بود. بررسی خریدهای قبلی...', 'در حال انتقال به درگاه امن مایکت...', 'در حال ثبت و تایید تراکنش...'];
+  for (let i = 0; i < steps.length; i++) { proState.buyStep = i; if (cur().name === 'pro') renderScreen(); await sleep(1100); }
+  setPro(true); saveState();
+  proState.buying = false;
+  toast('خرید نسخه پرو با موفقیت انجام شد!');
+  render();
+}
+function proHtml() {
+  if (S.isPro) {
+    return '<div class="space"><section class="p15 center gold-glow" style="border-radius:1.5rem;background:var(--navy);color:#fff"><div style="position:relative">'
+      + '<span style="display:flex;align-items:center;justify-content:center;width:4rem;height:4rem;margin:0 auto;border-radius:1.5rem;background:var(--primary);color:var(--primary-foreground)">' + ic('Crown','xl') + '</span>'
+      + '<h2 class="t14 eb" style="margin-top:.75rem;color:var(--primary)">ارتقا به نسخه پرو و ورود به قلمرو امنیت محض</h2>'
+      + '<p class="t11 lh6" style="margin-top:.375rem;color:rgba(255,255,255,.75)">با یک‌بار فعالسازی نسخه پرو، به تمامی ۲۰ درس جامع آموزشی ضد هک و ۱۳ ابزار پیشرفته امنیتی شامل پنهان‌یاب بدافزار، کاوشگر دسترسی‌ها و سپر اسکن سریع نفوذ دسترسی نامحدود و مادام‌العمر پیدا کنید.</p>'
+      + '</div></section>'
+      + '<div class="card center" style="border-color:color-mix(in srgb,var(--emerald) 40%,transparent);background:color-mix(in srgb,var(--emerald) 10%,transparent);padding:1.5rem;animation:fadeUp .3s ease both">'
+      + ic('CheckCircle2','xl') + '<h3 class="t14 eb" style="margin-top:.5rem;color:var(--emerald-dark)">تبریک! برنامه با موفقیت به نسخه پرو ارتقا یافت.</h3>'
+      + '<p class="t12 muted" style="margin-top:.25rem">کاربر لایسنس فعال دارد — از تمام امکانات بهره‌مند هستید.</p>'
+      + '<button class="btn sec" data-act="deactivate-pro" style="margin-top:1rem;border-color:color-mix(in srgb,var(--destructive) 40%,transparent);color:var(--destructive);background:transparent">غیرفعالسازی لایسنس (تست)</button></div></div>';
+  }
+  return '<div class="space">'
+    + '<section class="p15 center gold-glow" style="position:relative;overflow:hidden;border-radius:1.5rem;background:var(--navy);color:#fff">'
+    + '<div style="position:absolute;left:-2.5rem;top:-2.5rem;width:10rem;height:10rem;border-radius:99px;background:color-mix(in srgb,var(--primary) 25%,transparent);filter:blur(30px)"></div>'
+    + '<div style="position:relative"><span style="display:flex;align-items:center;justify-content:center;width:4rem;height:4rem;margin:0 auto;border-radius:1.5rem;background:var(--primary);color:var(--primary-foreground)">' + ic('Crown','xl') + '</span>'
+    + '<h2 class="t14 eb" style="margin-top:.75rem;color:var(--primary)">ارتقا به نسخه پرو و ورود به قلمرو امنیت محض</h2>'
+    + '<p class="t11 lh6" style="margin-top:.375rem;color:rgba(255,255,255,.75)">با یک‌بار فعالسازی نسخه پرو، به تمامی ۲۰ درس جامع آموزشی ضد هک و ۱۳ ابزار پیشرفته امنیتی شامل پنهان‌یاب بدافزار، کاوشگر دسترسی‌ها و سپر اسکن سریع نفوذ دسترسی نامحدود و مادام‌العمر پیدا کنید.</p></div></section>'
+    + '<section class="space3" aria-label="ویژگی‌های نسخه حرفه‌ای"><h3 class="t13 eb" style="padding:0 .25rem">ویژگی‌های بی‌نظیر نسخه حرفه‌ای (PRO):</h3>'
+    + PRO_FEATURES.map((f, i) => '<div class="card rowb" style="padding:.875rem;animation:fadeUp .3s ease both;animation-delay:' + (i * 0.06) + 's"><span style="display:flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;flex-shrink:0;border-radius:.75rem;background:color-mix(in srgb,var(--primary) 12%,transparent)">' + ic(f.icon, 'sm') + '</span><div><p class="t125 eb">' + f.title + '</p><p class="t11 lh5 muted" style="margin-top:.125rem">' + f.desc + '</p></div></div>').join('')
+    + '</section>'
+    + '<section class="card pad" aria-label="فعال‌سازی و ارتقا"><h3 class="t13 eb" style="margin-bottom:.75rem">فعال‌سازی و ارتقای نسخه پرو:</h3>'
+    + (proState.buying
+      ? '<div class="space3" style="border-radius:1rem;border-color:color-mix(in srgb,var(--primary) 40%,transparent);background:color-mix(in srgb,var(--primary) 5%,transparent);padding:1rem">'
+        + '<p class="row t12 b" style="gap:.5rem;color:var(--primary)">' + ic('Loader2','xs spin') + 'در حال پردازش...</p>'
+        + '<ul class="space3" style="list-style:none;font-size:.6875rem;color:var(--muted-foreground)">'
+        + ['اتصال به مایکت موفق بود. بررسی خریدهای قبلی...', 'در حال انتقال به درگاه امن مایکت...', 'در حال ثبت و تایید تراکنش...'].map((s, i) => '<li class="' + (i <= proState.buyStep ? 'b' : '') + '" style="' + (i <= proState.buyStep ? 'color:var(--foreground)' : '') + '">' + (i < proState.buyStep ? '✓ ' : i === proState.buyStep ? '• ' : '○ ') + s + '</li>').join('')
+        + '</ul></div>'
+      : '<div class="space3"><p class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">درگاه امن خرید مستقیم درون‌برنامه‌ای فروشگاه مایکت. فعال‌سازی ۱۰۰٪ آنی بدون دریافت کد فعالساز.</p>'
+        + '<button class="btn" data-act="myket-buy" style="padding:1.15rem">' + ic('Sparkles','sm') + 'خرید و فعال‌سازی آنلاین با مایکت</button></div>')
+    + '</section>'
+    + '<p class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 50%,transparent);padding:.875rem;font-size:.65625rem;line-height:1.5rem;color:var(--muted-foreground)">هزینه نسخه حرفه‌ای برنامه بسیار ناچیز در نظر گرفته شده و تقریباً در حد قیمت یک بسته چیپس است. هدف اصلی این پروژه افزایش آگاهی امنیتی کاربران و توسعه ابزارهای کاربردی برای حفظ حریم خصوصی است.</p>'
+    + '</div>';
+}
+
+/* ═══════════ صفحه: تنظیمات ═══════════ */
+function settingsHtml() {
+  const FONTS = [ {key:'sm', label:'کوچک'}, {key:'md', label:'متوسط'}, {key:'lg', label:'بزرگ'}, {key:'xl', label:'بسیار بزرگ'} ];
+  return '<div class="space3">'
+    + '<section class="card row pad"><span style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;flex-shrink:0;border-radius:1rem;' + (S.isPro ? 'background:var(--primary);color:var(--primary-foreground)' : 'background:color-mix(in srgb,var(--primary) 12%,transparent)') + '">' + ic('Crown','lg') + '</span>'
+    + '<div class="grow"><p class="t12 eb">' + (S.isPro ? 'نسخه پرو فعال است' : 'نسخه رایگان') + '</p><p class="t11 muted">' + (S.isPro ? 'کاربر لایسنس فعال دارد' : 'برای دسترسی به تمامی امکانات، نسخه کامل را فعال کنید.') + '</p></div>'
+    + '<button class="btn" data-act="go-pro" style="width:auto;height:2.25rem;padding:0 1rem;font-size:.75rem;border-radius:.75rem">' + (S.isPro ? 'مشاهده' : 'ارتقا به پرو') + '</button></section>'
+
+    + '<section class="card pad"><h3 class="row t13 eb" style="gap:.5rem">' + ic('Sun','xs') + 'پوسته دیداری (تم برنامه)</h3>'
+    + '<p class="t11 lh6 muted" style="margin-top:.25rem">حالت تیره برای استفاده در شب و کاهش خستگی چشم، و حالت روشن مناسب نور فضای آزاد می‌باشد.</p>'
+    + '<div class="grid2" style="margin-top:.75rem" role="radiogroup" aria-label="انتخاب پوسته">'
+    + [['dark', 'پوسته تیره', 'Moon'], ['light', 'پوسته روشن', 'Sun']].map(([k, label, icon]) => '<button role="radio" aria-checked="' + (S.theme === k) + '" data-act="set-theme" data-theme="' + k + '" style="display:flex;align-items:center;justify-content:center;gap:.5rem;border-radius:1rem;padding:.875rem;font-size:.75rem;font-weight:800;transition:.15s;' + (S.theme === k ? 'background:var(--primary);color:var(--primary-foreground);box-shadow:0 4px 6px -1px rgba(0,0,0,.1)' : 'background:var(--secondary);color:var(--muted-foreground)') + '">' + ic(icon, 'xs') + label + '</button>').join('')
+    + '</div></section>'
+
+    + '<section class="card pad"><h3 class="row t13 eb" style="gap:.5rem">' + ic('Type','xs') + 'اندازه قلم متون آموزشی (سایز فونت)</h3>'
+    + '<p class="t11 lh6 muted" style="margin-top:.25rem">اندازه نمایش قلم متون و مباحث هک و امنیت را با توجه به بینایی خود تنظیم کنید.</p>'
+    + '<div class="grid4" style="margin-top:.75rem" role="radiogroup" aria-label="اندازه فونت">'
+    + FONTS.map(f => '<button role="radio" aria-checked="' + (S.font === f.key) + '" data-act="set-font" data-font="' + f.key + '" style="border-radius:1rem;padding:.75rem 0;font-size:.75rem;font-weight:800;transition:.15s;' + (S.font === f.key ? 'background:var(--primary);color:var(--primary-foreground);box-shadow:0 4px 6px -1px rgba(0,0,0,.1)' : 'background:var(--secondary);color:var(--muted-foreground)') + '">' + f.label + '</button>').join('')
+    + '</div></section>'
+
+    + '<section class="card pad"><h3 class="row t13 eb" style="gap:.5rem">' + ic('Info','xs') + 'درباره برنامه</h3>'
+    + '<p class="t11 lh7 muted" style="margin-top:.5rem">هدف این برنامه افزایش سطح آگاهی سایبری عموم مردم، تامین امنیت شبکه‌های اجتماعی و حفظ حریم خصوصی است. تمامی محتواها و کدهای موجود به صورت کاملاً مستقل و ۱۰۰٪ آفلاین توسعه یافته است. محیط امن کامپایل‌شده، مرجع آفلاین حریم خصوصی و امنیت.</p>'
+    + '<div class="space3" style="margin-top:.75rem">'
+    + '<div class="row t11 b" style="gap:.625rem;border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem">' + ic('ShieldCheck','xs') + '۱۰۰٪ آفلاین، بدون نیاز به دسترسی اینترنت</div>'
+    + '<div class="row t11 b" style="gap:.625rem;border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem">' + ic('Smartphone','xs') + 'نسخه ' + esc(DATA.version) + ' (' + esc(DATA.versionName) + ')</div>'
+    + '<div class="row t11 b" style="gap:.625rem;border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem">' + ic('CheckCircle2','xs') + fa(DATA.lessons.length) + ' مبحث جامع • ' + fa(DATA.tools.length) + ' ابزار مجهز</div>'
+    + '</div></section>'
+
+    + '<p class="center t105 muted" style="padding-bottom:.5rem">اپلیکیشن امنیتی ضد هک (Anti Hack) — ساخته شده با عشق برای امنیت شما</p>'
+    + '</div>';
+}
+
+/* ═══════════ رندر اصلی ═══════════ */
+function renderScreen() {
+  const c = cur();
+  let html = '';
+  switch (c.name) {
+    case 'home': html = homeHtml(); break;
+    case 'lessons': html = lessonsHtml(); break;
+    case 'lesson-detail': html = lessonDetailHtml(c.id); break;
+    case 'tools': html = toolsHtml(); break;
+    case 'tool': html = toolHtml(c.route); break;
+    case 'pro': html = proHtml(); break;
+    case 'settings': html = settingsHtml(); break;
+    default: html = homeHtml();
+  }
+  $('#screen').innerHTML = '<div class="screenin">' + html + '</div>';
+  const inp = $('#lesson-q') || $('#ps-input') || $('#apps-q');
+  if (inp && (c.name === 'lessons' || c.name === 'tool' && c.route === 'password-strength')) inp.focus();
+  const range = $('#screen input[type=range]');
+  if (range) { const sync = () => range.style.setProperty('--fill', ((range.value - 8) / 32 * 100) + '%'); range.addEventListener('input', sync); sync(); }
+}
+
+function render() { renderHeader(); renderScreen(); }
+
+/* ═══════════ دیسکلیمر آنبوردینگ ═══════════ */
+function showDisclaimer() {
+  const el = $('#disclaimer');
+  el.innerHTML = '<div class="dialog gold-glow" role="dialog" aria-modal="true" aria-labelledby="dt" style="animation:fadeUp .3s ease both">'
+    + '<div class="row" style="margin-bottom:1rem"><div style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;border-radius:1rem;background:color-mix(in srgb,var(--destructive) 15%,transparent)">' + ic('ShieldAlert','xl') + '</div>'
+    + '<div><h2 id="dt" class="t18 eb" style="color:var(--destructive)">هشدار خطر</h2><p class="t12 muted">لطفاً پیش از ادامه مطالعه کنید</p></div></div>'
+    + '<div style="max-height:18rem;overflow-y:auto;white-space:pre-line;border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:1rem;font-size:.8125rem;line-height:1.75rem;color:color-mix(in srgb,var(--foreground) 90%,transparent)">' + esc(DISCLAIMER) + '</div>'
+    + '<button class="btn" data-act="accept-disclaimer" style="margin-top:1.25rem;padding:1.35rem;font-size:1rem">متوجه شدم و رعایت می‌کنم</button></div>';
+  el.classList.remove('hidden');
+}
+function acceptDisclaimer() { try { localStorage.setItem(LS.onboarded, '1'); } catch(e){} $('#disclaimer').classList.add('hidden'); }
+
+/* ═══════════ رویدادها (Event Delegation) ═══════════ */
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('[data-act]');
+  if (!t) return;
+  const act = t.getAttribute('data-act');
+  switch (act) {
+    case 'back': pop(); break;
+    case 'tab': setTab({ name: t.getAttribute('data-name') }); break;
+    case 'go-pro': push({ name: 'pro' }); break;
+    case 'open-tool': push({ name: 'tool', route: t.getAttribute('data-route') }); break;
+    case 'open-lesson': push({ name: 'lesson-detail', id: Number(t.getAttribute('data-id')) }); break;
+    case 'accept-disclaimer': acceptDisclaimer(); break;
+    case 'set-theme': setTheme(t.getAttribute('data-theme')); render(); break;
+    case 'set-font': setFont(t.getAttribute('data-font')); render(); break;
+    case 'deactivate-pro': setPro(false); saveState(); render(); break;
+    case 'myket-buy': simulateMyket(); break;
+    case 'shield-scan': runShieldScan(); break;
+    case 'fix-issue': { const r = applyFix(t.getAttribute('data-fix')); if (r.ok) { toast(r.message); if (shield.result) { shield.result.issues = shield.result.issues.filter(i => i.id !== t.getAttribute('data-id')); } renderScreen(); } else toast(r.error || 'خطا در رفع مشکل', 'err'); break; }
+    case 'tool-scan': {
+      const c = cur(); const route = c.route;
+      const st = route === 'hidden-apps' ? toolState.hidden : route === 'recent-apps' ? toolState.recent : toolState.special;
+      st.scanning = true; st.apps = null; renderScreen();
+      setTimeout(() => {
+        const apps = S.apps;
+        if (route === 'hidden-apps') st.apps = apps.filter(a => !a.hasLauncherIcon && !a.isSystem && !a.isGooglePackage);
+        else if (route === 'recent-apps') st.apps = apps.filter(a => Date.now() - new Date(a.installDate).getTime() <= 60 * 86400000);
+        else st.apps = apps.filter(a => route === 'device-admin' ? a.isDeviceAdmin : route === 'accessibility' ? a.isAccessibility : route === 'overlay' ? a.isOverlay : a.isUsageAccess);
+        st.scanning = false;
+        if (cur().name === 'tool' && cur().route === route) renderScreen();
+      }, 1400);
+      break;
+    }
+    case 'perm-scan': { toolState.perm.scanning = true; renderScreen(); setTimeout(() => { toolState.perm.apps = S.apps.filter(a => a.permissions.includes(toolState.perm.tab)); toolState.perm.scanning = false; if (cur().name === 'tool' && cur().route === 'sensitive-permissions') renderScreen(); }, 1200); break; }
+    case 'perm-tab': { toolState.perm.tab = t.getAttribute('data-perm'); toolState.perm.apps = S.apps.filter(a => a.permissions.includes(toolState.perm.tab)); renderScreen(); break; }
+    case 'toggle-shortcut': { const id = Number(t.getAttribute('data-id')); openShortcut = openShortcut === id ? null : id; renderScreen(); break; }
+    case 'check-toggle': { const id = Number(t.getAttribute('data-id')); checklist = checklist.includes(id) ? checklist.filter(x => x !== id) : [...checklist, id]; saveChecklist(); renderScreen(); break; }
+    case 'checklist-reset': { checklist = []; saveChecklist(); toast('چک‌لیست بازنشانی شد'); renderScreen(); break; }
+    case 'pw-gen': { pwGen.pw = generatePassword(pwGen.length, pwGen.upper, pwGen.digits, pwGen.symbols); pwGen.copied = false; renderScreen(); break; }
+    case 'pw-toggle': { const k = t.getAttribute('data-key'); pwGen[k] = !pwGen[k]; pwGen.pw = generatePassword(pwGen.length, pwGen.upper, pwGen.digits, pwGen.symbols); pwGen.copied = false; renderScreen(); break; }
+    case 'pw-copy': {
+      const done = () => { pwGen.copied = true; renderScreen(); toast('رمز عبور با موفقیت کپی شد!'); setTimeout(() => { pwGen.copied = false; }, 2000); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(pwGen.pw).then(done).catch(() => legacyCopy(pwGen.pw, done));
+      else legacyCopy(pwGen.pw, done);
+      break;
+    }
+  }
+});
+
+function legacyCopy(text, done) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); ta.remove(); done();
+  } catch (e) { toast('کپی ناموفق بود', 'err'); }
+}
+
+document.addEventListener('input', (e) => {
+  const t = e.target;
+  if (t.matches('[data-act=lesson-search]')) { lessonQuery = t.value; const pos = t.selectionStart; renderScreen(); const n = $('#lesson-q'); if (n) { n.focus(); n.setSelectionRange(pos, pos); } }
+  else if (t.matches('[data-act=ps-input]')) { pwStrength = t.value; renderScreen(); const n = $('#ps-input'); if (n) { n.focus(); n.setSelectionRange(n.value.length, n.value.length); } }
+  else if (t.matches('[data-act=apps-search]')) { toolState.all.q = t.value; const pos = t.selectionStart; renderScreen(); const n = $('#apps-q'); if (n) { n.focus(); n.setSelectionRange(pos, pos); } }
+  else if (t.matches('[data-act=pw-length]')) { pwGen.length = Number(t.value); pwGen.pw = generatePassword(pwGen.length, pwGen.upper, pwGen.digits, pwGen.symbols); pwGen.copied = false; renderScreen(); }
+});
+
+/* ═══════════ راه‌اندازی ═══════════ */
+loadState();
+render();
+$('#loading').classList.add('hidden');
+$('#app').classList.remove('hidden');
+let onboarded = false;
+try { onboarded = !!localStorage.getItem(LS.onboarded); } catch(e){}
+if (!onboarded) setTimeout(showDisclaimer, 150);
+</script>
+</body>
+</html>
