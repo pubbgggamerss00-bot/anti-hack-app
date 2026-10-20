@@ -273,6 +273,31 @@ public class MainActivity extends Activity {
         }
 
         /**
+         * منبع نصب برنامه (مایکت یا خارج از مایکت) — برای سازگاری با قوانین انتشار فروشگاه‌ها:
+         * در نسخه‌های نصب‌شده از مایکت، بروزرسانی باید از طریق خود فروشگاه انجام شود و
+         * امکان بروزرسانی مستقیم از گیت‌هاب در رابط کاربری نمایش داده نمی‌شود.
+         */
+        @JavascriptInterface
+        public String distribution() {
+            JSONObject res = new JSONObject();
+            try {
+                String installer = null;
+                try {
+                    if (Build.VERSION.SDK_INT >= 30) {
+                        installer = getPackageManager().getInstallSourceInfo(getPackageName()).getInstallingPackageName();
+                    } else {
+                        @SuppressWarnings("deprecation")
+                        String dep = getPackageManager().getInstallerPackageName(getPackageName());
+                        installer = dep;
+                    }
+                } catch (Exception ignored) { }
+                res.put("installer", installer == null ? "" : installer);
+                res.put("viaMyket", "ir.mservices.market".equals(installer));
+            } catch (Exception ignored) { }
+            return res.toString();
+        }
+
+        /**
          * بازکردن صفحه ثبت نظر و امتیازدهی برنامه در مایکت — طبق مستندات رسمی:
          * myket://comment?id=PACKAGE با Intent.ACTION_VIEW
          * (پس از نمایش دیالوگ تأیید در سمت جاوااسکریپت فراخوانی می‌شود)

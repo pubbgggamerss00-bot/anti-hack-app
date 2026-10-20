@@ -349,7 +349,7 @@ const DEFAULT_STATE = { screenLock:'fingerprint', usbDebugging:true, playProtect
 
 const S = {
   stack: [{ name:'home' }],
-  isPro: false, theme:'dark', font:'md', deviceCode:'',
+  isPro: false, theme:'dark', font:'md', deviceCode:'', viaMyket:false,
   deviceState: JSON.parse(JSON.stringify(DEFAULT_STATE)),
   apps: [], lastScanScore: null,
 };
@@ -359,6 +359,10 @@ function loadState() {
     S.isPro = localStorage.getItem(LS.pro) === '1';
     S.theme = localStorage.getItem(LS.theme) || 'dark';
     S.font = localStorage.getItem(LS.font) || 'md';
+    try {
+      const dist = (window.AndroidBridge && window.AndroidBridge.distribution) ? JSON.parse(window.AndroidBridge.distribution() || '{}') : null;
+      S.viaMyket = !!(dist && dist.viaMyket);
+    } catch (e) { S.viaMyket = false; }
     let d = localStorage.getItem(LS.device);
     if (!d) {
       const chars = 'ABCDEF0123456789';
@@ -1209,12 +1213,19 @@ function settingsHtml() {
     + FONTS.map(f => '<button role="radio" aria-checked="' + (S.font === f.key) + '" data-act="set-font" data-font="' + f.key + '" style="border-radius:1rem;padding:.75rem 0;font-size:.75rem;font-weight:800;transition:.15s;' + (S.font === f.key ? 'background:var(--primary);color:var(--primary-foreground);box-shadow:0 4px 6px -1px rgba(0,0,0,.1)' : 'background:var(--secondary);color:var(--muted-foreground)') + '">' + f.label + '</button>').join('')
     + '</div></section>'
 
-    + '<section class="card pad"><h3 class="row t13 eb" style="gap:.5rem">' + ic('RefreshCw','xs') + 'بررسی بروزرسانی</h3>'
-    + '<p class="t11 lh6 muted" style="margin-top:.25rem">نسخه نصب‌شده برنامه با آخرین نسخه منتشرشده در گیت‌هاب مقایسه می‌شود. در صورت وجود نسخه جدید، دریافت و نصب آن مستقیماً از داخل برنامه انجام می‌گیرد.</p>'
-    + '<div class="row" style="margin-top:.75rem;gap:.625rem">'
-    + '<div class="grow t11 b" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem">نسخه نصب‌شده: <b style="color:var(--primary)">' + faVer(DATA.version) + '</b></div>'
-    + '<button class="btn" data-act="check-update" style="width:auto;height:2.75rem;padding:0 1rem;font-size:.75rem;border-radius:.75rem;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;gap:.375rem">' + ic('RefreshCw','xs') + '<span>بررسی بروزرسانی</span></button>'
-    + '</div></section>'
+    + (S.viaMyket
+      ? '<section class="card pad"><h3 class="row t13 eb" style="gap:.5rem">' + ic('RefreshCw','xs') + 'بروزرسانی برنامه</h3>'
+        + '<p class="t11 lh6 muted" style="margin-top:.25rem">این نسخه از طریق فروشگاه مایکت نصب شده است؛ بروزرسانی‌های برنامه به‌صورت خودکار از طریق مایکت در دسترس شما قرار می‌گیرد و نیازی به بررسی دستی نیست.</p>'
+        + '<div class="row t11 b" style="margin-top:.75rem;gap:.625rem;border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem">' + ic('ShieldCheck','xs') + 'نسخه نصب‌شده: <b style="color:var(--primary)">' + faVer(DATA.version) + '</b></div></section>'
+      : '<section class="card pad"><h3 class="row t13 eb" style="gap:.5rem">' + ic('RefreshCw','xs') + 'بررسی بروزرسانی</h3>'
+        + '<p class="t11 lh6 muted" style="margin-top:.25rem">نسخه نصب‌شده برنامه با آخرین نسخه منتشرشده در گیت‌هاب مقایسه می‌شود. در صورت وجود نسخه جدید، دریافت و نصب آن مستقیماً از داخل برنامه انجام می‌گیرد.</p>'
+        + '<div class="row" style="margin-top:.75rem;gap:.625rem">'
+        + '<div class="grow t11 b" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem">نسخه نصب‌شده: <b style="color:var(--primary)">' + faVer(DATA.version) + '</b></div>'
+        + '<button class="btn" data-act="check-update" style="width:auto;height:2.75rem;padding:0 1rem;font-size:.75rem;border-radius:.75rem;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;gap:.375rem">' + ic('RefreshCw','xs') + '<span>بررسی بروزرسانی</span></button>'
+        + '</div></section>')
+
+    + '<section class="card pad"><h3 class="row t13 eb" style="gap:.5rem">' + ic('Lock','xs') + 'حریم خصوصی و امنیت داده‌ها</h3>'
+    + '<p class="t11 lh6 muted" style="margin-top:.25rem">برنامه ضد هک کاملاً آفلاین است: هیچ داده شخصی، لیست تماس، پیام یا اطلاعات دستگاه شما به هیچ سروری ارسال نمی‌شود؛ هیچ تبلیغات یا ردیابی وجود ندارد و تمام پردازش‌ها داخل خود دستگاه انجام می‌گیرد. دسترسی اینترنت فقط برای تراکنش خرید درون‌برنامه‌ای مایکت و بررسی بروزرسانی (در نسخه نصب‌شده خارج از فروشگاه) استفاده می‌شود.</p></section>'
 
     + '<button class="card row pad" data-act="rate-open" style="width:100%;text-align:right;cursor:pointer"><span style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;flex-shrink:0;border-radius:1rem;background:color-mix(in srgb,var(--primary) 12%,transparent);color:var(--primary)">' + ic('Star','lg') + '</span>'
     + '<div class="grow"><p class="t12 eb">امتیاز دادن به برنامه در مایکت</p><p class="t11 lh5 muted" style="margin-top:.125rem">اگر از برنامه راضی هستید، با ثبت امتیاز و نوشتن تجربه خود در مایکت، به رشد برنامه و آگاهی کاربران دیگر کمک کنید.</p></div>'
@@ -1316,6 +1327,8 @@ function closeUpdateDialog() { const el = $('#disclaimer'); el.classList.add('hi
 
 async function checkUpdate() {
   if (updateState.busy) return;
+  /* قوانین فروشگاه: در نسخه‌های نصب‌شده از مایکت، بروزرسانی فقط از طریق خود فروشگاه */
+  if (S.viaMyket) { toast('بروزرسانی این نسخه به‌صورت خودکار از طریق فروشگاه مایکت انجام می‌شود'); return; }
   updateState.busy = true;
   const btn = $('[data-act=check-update]');
   if (btn) { btn.disabled = true; btn.style.opacity = '.75'; btn.innerHTML = ic('Loader2', 'xs spin') + '<span>در حال بررسی...</span>'; }
