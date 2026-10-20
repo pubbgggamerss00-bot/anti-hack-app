@@ -111,6 +111,20 @@ public class MyketBilling {
         }
     }
 
+    /**
+     * اطمینان از اتصال سرویس پیش از هر عملیات؛ اگر اتصال اولیه هنوز برقرار نشده باشد
+     * دوباره تلاش می‌کند و حداکثر تا timeout منتظر onServiceConnected می‌ماند.
+     * (رفع خطای «not_bound» هنگامی که کاربر سریع به صفحه خرید می‌رود)
+     */
+    private boolean ensureBound(long timeoutMs) {
+        long deadline = System.currentTimeMillis() + timeoutMs;
+        while (service == null && System.currentTimeMillis() < deadline) {
+            bind(); /* اگر اتصال قبلی ناموفق بوده، دوباره تلاش می‌شود */
+            try { Thread.sleep(200); } catch (InterruptedException e) { break; }
+        }
+        return service != null;
+    }
+
     public void unbind() {
         if (bound) {
             try { ctx.unbindService(conn); } catch (Exception ignored) { }
@@ -134,6 +148,7 @@ public class MyketBilling {
                 res.put("error", "market_missing");
                 return res;
             }
+            ensureBound(4000);
             if (service == null) {
                 res.put("ok", false);
                 res.put("error", "not_bound");
@@ -197,7 +212,7 @@ public class MyketBilling {
                 res.put("error", "market_missing");
                 return res.toString();
             }
-            if (service == null) {
+            if (!ensureBound(4000)) {
                 res.put("ok", false);
                 res.put("error", "not_bound");
                 return res.toString();
@@ -214,6 +229,7 @@ public class MyketBilling {
             if (resp != BILLING_OK) {
                 res.put("ok", false);
                 res.put("code", resp);
+                res.put("error", "billing_code");
                 return res.toString();
             }
             // استخراج PendingIntent صفحه خرید (الگوی استاندارد IabHelper)
@@ -247,7 +263,11 @@ public class MyketBilling {
             try { res.put("ok", false); res.put("error", "remote"); } catch (Exception ignored) { }
             return res.toString();
         } catch (Exception e) {
-            try { res.put("ok", false); res.put("error", "exception"); } catch (Exception ignored) { }
+            try {
+                res.put("ok", false);
+                res.put("error", "exception");
+                res.put("detail", e.getClass().getSimpleName());
+            } catch (Exception ignored) { }
             return res.toString();
         }
     }

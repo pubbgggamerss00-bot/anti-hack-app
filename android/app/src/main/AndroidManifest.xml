@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.z.hack"
-    android:versionCode="6"
-    android:versionName="1.5.0">
+    android:versionCode="7"
+    android:versionName="1.5.1">
 
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34" />
 
@@ -12,6 +12,17 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- خرید درون‌برنامه‌ای مایکت (ارتقا به نسخه پرو) -->
     <uses-permission android:name="ir.mservices.market.BILLING" />
+
+    <!--
+      ضروری برای اندروید ۱۱ به بالا (Package Visibility):
+      بدون این تعریف، سیستم‌عامل وجود مایکت را از برنامه پنهان می‌کند و
+      اتصال به سرویس خرید هرگز برقرار نمی‌شود (خطای «خرید ناموفق بود»). -->
+    <queries>
+        <package android:name="ir.mservices.market" />
+        <intent>
+            <action android:name="ir.mservices.market.InAppBillingService.BIND" />
+        </intent>
+    </queries>
 
     <application
         android:label="ضد هک"

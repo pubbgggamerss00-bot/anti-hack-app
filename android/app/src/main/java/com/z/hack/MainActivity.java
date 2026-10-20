@@ -243,6 +243,16 @@ public class MainActivity extends Activity {
             }).start();
         }
 
+        /** بازکردن لینک خارجی (مثلاً صفحه دریافت مایکت) در مرورگر/اپ مقصد */
+        @JavascriptInterface
+        public void openExternal(String url) {
+            try {
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+            } catch (Exception ignored) { }
+        }
+
         /** بررسی مالکیت اشتراک پرو از مایکت (بازیابی خریدهای قبلی) — خروجی JSON */
         @JavascriptInterface
         public String myketCheckOwned() {
