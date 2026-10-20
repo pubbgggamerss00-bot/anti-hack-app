@@ -10,7 +10,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"                           # android/
 APP="$ROOT/app"
 OUT="$ROOT/build"
 KEYSTORE="$ROOT/scripts/release.keystore"
-VERSION="${VERSION:-1.4.0}"
+VERSION="${VERSION:-1.5.0}"
 
 rm -rf "$OUT"
 mkdir -p "$OUT/classes" "$OUT/dex" "$OUT/compiled-res" "$OUT/gen"

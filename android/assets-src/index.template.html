@@ -298,7 +298,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:1.25rem;he
   <div class="splash-tag" aria-hidden="true"><span class="t1">۱۰۰٪ آفلاین</span><span class="t2">حفاظت نهایی</span></div>
   <div class="splash-bar">
     <div class="track"><div class="fill" id="splash-fill"></div></div>
-    <div class="splash-meta"><span>نسخه ۱.۴.۰</span><span class="pct" id="splash-pct">۰٪</span></div>
+    <div class="splash-meta"><span>نسخه ۱.۵.۰</span><span class="pct" id="splash-pct">۰٪</span></div>
   </div>
   <p class="splash-status" id="splash-status">راه‌اندازی هسته امنیتی…</p>
 </div>
@@ -986,24 +986,69 @@ function toolHtml(route) {
   }
 }
 
-/* ═══════════ صفحه: پرو (روش مایکت) ═══════════ */
+/* ═══════════ صفحه: پرو (خرید درون‌برنامه‌ای مایکت) ═══════════ */
 const PRO_FEATURES = [
   { icon:'BookOpen', title:'بازگشایی کل ۲۰ مبحث تفصیلی رفع هک اکانت‌ها', desc:'اینستاگرام، تلگرام، واتساپ، جیمیل، روبیکا، ایتا، شاد، حساب گوگل و...' },
   { icon:'Wrench', title:'۱۳ ابزار و پایشگر سیستم', desc:'شامل سپر امنیتی طلایی، پنهان‌یاب و بازرس دسترسی‌ها' },
   { icon:'ShieldCheck', title:'اسکن کامل سپر طلایی', desc:'بررسی چندوجهی امنیت سیستم‌عامل و رفع خودکار مسائل' },
   { icon:'BadgeCheck', title:'دسترسی نامحدود و مادام‌العمر', desc:'از دسترسی کاملاً نامحدود و امن لذت ببرید' },
 ];
-const proState = { buying:false, buyStep:0 };
-async function simulateMyket() {
-  proState.buying = true; proState.buyStep = 0;
-  if (cur().name === 'pro') renderScreen();
-  const steps = ['اتصال به مایکت موفق بود. بررسی خریدهای قبلی...', 'در حال انتقال به درگاه امن مایکت...', 'در حال ثبت و تایید تراکنش...'];
-  for (let i = 0; i < steps.length; i++) { proState.buyStep = i; if (cur().name === 'pro') renderScreen(); await sleep(1100); }
-  setPro(true); saveState();
+const PRO_SKU = 'Pro';
+const proState = { buying:false };
+
+function myketBridge() { return (window.AndroidBridge && window.AndroidBridge.myketBuy) ? window.AndroidBridge : null; }
+
+/* فعال‌سازی پرو از طریق خرید موفق یا مالکیت تأییدشده */
+function unlockProFromMyket(msg) {
   proState.buying = false;
-  toast('خرید نسخه پرو با موفقیت انجام شد!');
+  setPro(true); saveState();
+  toast(msg || 'خرید با موفقیت انجام شد! نسخه پرو فعال گردید');
   render();
 }
+
+/* شروع خرید درون‌برنامه‌ای «اشتراک پرو» (شناسه Pro) از مایکت */
+async function startMyketPurchase() {
+  if (proState.buying) return;
+  const bridge = myketBridge();
+  if (!bridge) { toast('خرید درون‌برنامه‌ای مایکت فقط در نسخه اندروید برنامه فعال است', 'err'); return; }
+  proState.buying = true;
+  if (cur().name === 'pro') renderScreen();
+  try {
+    const res = JSON.parse(bridge.myketBuy() || '{}');
+    if (res.launched) return; /* منتظر نتیجه از صفحه خرید مایکت (onActivityResult) */
+    proState.buying = false;
+    if (cur().name === 'pro') renderScreen();
+    if (res.owned || res.code === 7) { unlockProFromMyket('اشتراک پرو قبلاً خریداری شده است — فعال شد'); return; }
+    if (res.error === 'market_missing') toast('مایکت روی دستگاه شما نصب نیست؛ ابتدا مایکت را نصب کنید', 'err');
+    else if (res.error === 'not_bound') toast('اتصال به مایکت برقرار نشد؛ مایکت را یک‌بار باز کرده و دوباره تلاش کنید', 'err');
+    else if (res.error === 'unsupported') toast('فروشگاه مایکت نصب‌شده از خرید درون‌برنامه‌ای پشتیبانی نمی‌کند', 'err');
+    else if (res.error === 'unavailable') toast('خرید درون‌برنامه‌ای در این نسخه در دسترس نیست', 'err');
+    else toast('شروع خرید ناموفق بود؛ دوباره تلاش کنید', 'err');
+  } catch (e) {
+    proState.buying = false;
+    if (cur().name === 'pro') renderScreen();
+    toast('خطا در شروع خرید از مایکت', 'err');
+  }
+}
+
+/* نتیجه خرید از صفحه مایکت (پس از onActivityResult) */
+window.__myketPurchaseResult = function (ok, info) {
+  info = info || {};
+  if (ok || info.owned) { unlockProFromMyket(info.code === 7 ? 'اشتراک پرو شما شناسایی شد — فعال گردید' : undefined); return; }
+  proState.buying = false;
+  if (cur().name === 'pro') renderScreen();
+  if (info.canceled || info.code === 1) toast('خرید لغو شد', 'err');
+  else if (info.error === 'invalid_signature') toast('تأیید امضای تراکنش ناموفق بود؛ خرید معتبر نیست', 'err');
+  else if (info.error === 'wrong_product') toast('محصول خریداری‌شده با اشتراک پرو مطابقت ندارد', 'err');
+  else if (info.error === 'launch_failed') toast('بازکردن صفحه خرید مایکت ناموفق بود', 'err');
+  else if (info.code === 3 || info.code === 4) toast('محصول در مایکت در دسترس نیست؛ بعداً تلاش کنید', 'err');
+  else toast('خرید ناموفق بود؛ دوباره تلاش کنید', 'err');
+};
+
+/* بازیابی خودکار: پس از اتصال سرویس مایکت، مالکیت اشتراک پرو بررسی می‌شود */
+window.__myketOwnership = function (owned) {
+  if (owned && !S.isPro) unlockProFromMyket('اشتراک پرو شما از مایکت شناسایی و فعال شد');
+};
 function proHtml() {
   if (S.isPro) {
     return '<div class="space"><section class="p15 center gold-glow neonhero" style="border-radius:1.5rem;color:#fff"><div style="position:relative">'
@@ -1025,15 +1070,13 @@ function proHtml() {
     + '<section class="space3" aria-label="ویژگی‌های نسخه حرفه‌ای"><h3 class="t13 eb" style="padding:0 .25rem">ویژگی‌های بی‌نظیر نسخه حرفه‌ای (PRO):</h3>'
     + PRO_FEATURES.map((f, i) => '<div class="card rowb" style="padding:.875rem;animation:fadeUp .3s ease both;animation-delay:' + (i * 0.06) + 's"><span style="display:flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;flex-shrink:0;border-radius:.75rem;background:color-mix(in srgb,var(--primary) 12%,transparent)">' + ic(f.icon, 'sm') + '</span><div><p class="t125 eb">' + f.title + '</p><p class="t11 lh5 muted" style="margin-top:.125rem">' + f.desc + '</p></div></div>').join('')
     + '</section>'
-    + '<section class="card pad" aria-label="فعال‌سازی و ارتقا"><h3 class="t13 eb" style="margin-bottom:.75rem">فعال‌سازی و ارتقای نسخه پرو:</h3>'
+    + '<section class="card pad" aria-label="فعال‌سازی و ارتقا"><h3 class="t13 eb" style="margin-bottom:.75rem">فعال‌سازی با خرید درون‌برنامه‌ای مایکت:</h3>'
     + (proState.buying
-      ? '<div class="space3" style="border-radius:1rem;border-color:color-mix(in srgb,var(--primary) 40%,transparent);background:color-mix(in srgb,var(--primary) 5%,transparent);padding:1rem">'
-        + '<p class="row t12 b" style="gap:.5rem;color:var(--primary)">' + ic('Loader2','xs spin') + 'در حال پردازش...</p>'
-        + '<ul class="space3" style="list-style:none;font-size:.6875rem;color:var(--muted-foreground)">'
-        + ['اتصال به مایکت موفق بود. بررسی خریدهای قبلی...', 'در حال انتقال به درگاه امن مایکت...', 'در حال ثبت و تایید تراکنش...'].map((s, i) => '<li class="' + (i <= proState.buyStep ? 'b' : '') + '" style="' + (i <= proState.buyStep ? 'color:var(--foreground)' : '') + '">' + (i < proState.buyStep ? '✓ ' : i === proState.buyStep ? '• ' : '○ ') + s + '</li>').join('')
-        + '</ul></div>'
-      : '<div class="space3"><p class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">درگاه امن خرید مستقیم درون‌برنامه‌ای فروشگاه مایکت. فعال‌سازی ۱۰۰٪ آنی بدون دریافت کد فعالساز.</p>'
-        + '<button class="btn" data-act="myket-buy" style="padding:1.15rem">' + ic('Sparkles','sm') + 'خرید و فعال‌سازی آنلاین با مایکت</button></div>')
+      ? '<div class="space3" style="border-radius:1rem;border:1px solid color-mix(in srgb,var(--primary) 40%,transparent);background:color-mix(in srgb,var(--primary) 5%,transparent);padding:1rem">'
+        + '<p class="row t12 b" style="gap:.5rem;color:var(--primary)">' + ic('Loader2','xs spin') + 'در حال انتقال به درگاه امن مایکت...</p>'
+        + '<p class="t11 lh6 muted">پنجره خرید مایکت را کامل کنید. پس از پرداخت موفق، اشتراک پرو به‌صورت آنی و خودکار فعال می‌شود.</p></div>'
+      : '<div class="space3"><p class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 60%,transparent);padding:.75rem;font-size:.6875rem;line-height:1.5rem;color:var(--muted-foreground)">پرداخت امن مستقیماً از طریق درگاه خرید درون‌برنامه‌ای فروشگاه مایکت انجام می‌شود. محصول: <b>«اشتراک پرو»</b> (شناسه: Pro) — فعال‌سازی ۱۰۰٪ آنی و مادام‌العمر بدون دریافت کد فعالساز. در صورت نصب مجدد برنامه، خرید شما به‌صورت خودکار بازیابی می‌گردد.</p>'
+        + '<button class="btn" data-act="myket-buy" style="padding:1.15rem">' + ic('Sparkles','sm') + 'خرید اشتراک پرو با مایکت</button></div>')
     + '</section>'
     + '<p class="card" style="border-radius:1rem;background:color-mix(in srgb,var(--muted) 50%,transparent);padding:.875rem;font-size:.65625rem;line-height:1.5rem;color:var(--muted-foreground)">هزینه نسخه حرفه‌ای برنامه بسیار ناچیز در نظر گرفته شده و تقریباً در حد قیمت یک بسته چیپس است. هدف اصلی این پروژه افزایش آگاهی امنیتی کاربران و توسعه ابزارهای کاربردی برای حفظ حریم خصوصی است.</p>'
     + '</div>';
@@ -1265,7 +1308,7 @@ document.addEventListener('click', (e) => {
     case 'set-theme': setTheme(t.getAttribute('data-theme')); render(); break;
     case 'set-font': setFont(t.getAttribute('data-font')); render(); break;
     case 'deactivate-pro': setPro(false); saveState(); render(); break;
-    case 'myket-buy': simulateMyket(); break;
+    case 'myket-buy': startMyketPurchase(); break;
     case 'shield-scan': runShieldScan(); break;
     case 'fix-issue': { const r = applyFix(t.getAttribute('data-fix')); if (r.ok) { toast(r.message); if (shield.result) { shield.result.issues = shield.result.issues.filter(i => i.id !== t.getAttribute('data-id')); } renderScreen(); } else toast(r.error || 'خطا در رفع مشکل', 'err'); break; }
     case 'tool-scan': {

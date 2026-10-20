@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
 
     private WebView webView;
     private Handler mainHandler;
+    private MyketBilling myketBilling;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,34 @@ public class MainActivity extends Activity {
 
         webView.loadUrl("file:///android_asset/index.html");
         setContentView(webView);
+
+        /* اتصال به سرویس خرید درون‌برنامه‌ای مایکت — پس از اتصال، مالکیت اشتراک پرو بررسی می‌شود */
+        myketBilling = new MyketBilling(this, new MyketBilling.Listener() {
+            @Override
+            public void onBillingEvent(String json) {
+                try {
+                    JSONObject o = new JSONObject(json);
+                    String type = o.optString("type", "");
+                    if ("ownership".equals(type)) {
+                        boolean owned = o.optBoolean("owned", false);
+                        jsEval("window.__myketOwnership && window.__myketOwnership(" + (owned ? "true" : "false") + ")");
+                    } else if ("purchase".equals(type)) {
+                        boolean ok = o.optBoolean("ok", false);
+                        jsEval("window.__myketPurchaseResult && window.__myketPurchaseResult(" + (ok ? "true" : "false") + "," + json + ")");
+                    }
+                } catch (Exception ignored) { }
+            }
+        });
+        myketBilling.bind();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // نتیجه صفحه خرید مایکت؛ اگر متعلق به فرایند خرید باشد پردازش و به JS ارسال می‌شود
+        if (myketBilling != null && myketBilling.handleActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /* ───────────── نسخه نصب‌شده ───────────── */
@@ -213,6 +242,31 @@ public class MainActivity extends Activity {
                 }
             }).start();
         }
+
+        /** بررسی مالکیت اشتراک پرو از مایکت (بازیابی خریدهای قبلی) — خروجی JSON */
+        @JavascriptInterface
+        public String myketCheckOwned() {
+            if (myketBilling == null) return "{\"ok\":false,\"error\":\"unavailable\"}";
+            return myketBilling.checkOwnershipJson();
+        }
+
+        /** شروع خرید درون‌برنامه‌ای «اشتراک پرو» (شناسه Pro) از مایکت — خروجی JSON */
+        @JavascriptInterface
+        public String myketBuy() {
+            if (myketBilling == null) return "{\"ok\":false,\"error\":\"unavailable\"}";
+            return myketBilling.buy(MainActivity.this, "pro-upgrade");
+        }
+
+        /** نصب‌بودن فروشگاه مایکت روی دستگاه */
+        @JavascriptInterface
+        public String myketStatus() {
+            JSONObject res = new JSONObject();
+            try {
+                res.put("installed", myketBilling != null && myketBilling.isMarketInstalled());
+                res.put("bound", myketBilling != null && myketBilling.isBound());
+            } catch (Exception ignored) { }
+            return res.toString();
+        }
     }
 
     /* ───────────── دانلود و نصب ───────────── */
@@ -303,6 +357,9 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        if (myketBilling != null) {
+            myketBilling.unbind();
+        }
         if (webView != null) {
             webView.destroy();
         }
