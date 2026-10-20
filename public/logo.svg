@@ -1,12 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect x="2" y="2" width="96" height="96" rx="22" fill="#1b2432"/>
-  <path d="M50 16 L79 26 V49 C79 65 67 77 50 84 C33 77 21 65 21 49 V26 Z" fill="#f0b429"/>
-  <path d="M50 16 L79 26 V49 C79 65 67 77 50 84 Z" fill="#ffd24d"/>
-  <path d="M50 24 L71 31.5 V49.5 C71 61.5 62.5 71.5 50 77.5 Z" fill="#2c3950"/>
-  <path d="M50 24 L71 31.5 V49.5 C71 61.5 62.5 71.5 50 77.5 Z" fill="#3d4d6b" opacity="0.55"/>
-  <path d="M50 24 L71 31.5 V49.5 C71 61.5 62.5 71.5 50 77.5 Z" fill="none"/>
-  <path d="M50 24 L71 31.5 V49.5 C71 61.5 62.5 71.5 50 77.5 L50 51.5 Z" fill="#384a68"/>
-  <path d="M50 51.5 L71 31.5 V49.5 C71 61.5 62.5 71.5 50 77.5 Z" fill="#ffd24d" opacity="0.35"/>
-  <path d="M29 31.5 L50 24 L50 51.5 L29 51.5 Z" fill="#2c3950" opacity="0.85"/>
-  <path d="M36 47 l6 6 l14 -14" stroke="#ffd24d" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs>
+    <linearGradient id="neonShield" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#67e8f9"/>
+      <stop offset="0.5" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="neonShieldHi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a5f3fc"/>
+      <stop offset="1" stop-color="#60a5fa"/>
+    </linearGradient>
+    <linearGradient id="neonInner" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0c1a3a"/>
+      <stop offset="1" stop-color="#111f4d"/>
+    </linearGradient>
+    <filter id="neonGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3.2" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+  </defs>
+  <rect x="2" y="2" width="96" height="96" rx="22" fill="#050b1e"/>
+  <rect x="2" y="2" width="96" height="96" rx="22" fill="none" stroke="#38bdf8" stroke-opacity="0.35" stroke-width="1.5"/>
+  <path d="M50 16 L79 26 V49 C79 65 67 77 50 84 C33 77 21 65 21 49 V26 Z" fill="#38bdf8" opacity="0.55" filter="url(#softGlow)"/>
+  <path d="M50 16 L79 26 V49 C79 65 67 77 50 84 C33 77 21 65 21 49 V26 Z" fill="url(#neonShield)" filter="url(#neonGlow)"/>
+  <path d="M50 16 L79 26 V49 C79 65 67 77 50 84 Z" fill="url(#neonShieldHi)" opacity="0.85"/>
+  <path d="M50 24 L71 31.5 V49.5 C71 61.5 62.5 71.5 50 77.5 Z" fill="url(#neonInner)"/>
+  <path d="M50 24 L71 31.5 V49.5 C71 61.5 62.5 71.5 50 77.5 Z" fill="#1d4ed8" opacity="0.35"/>
+  <path d="M50 24 L71 31.5 V49.5 C71 61.5 62.5 71.5 50 77.5 L50 51.5 Z" fill="#16255c"/>
+  <path d="M50 51.5 L71 31.5 V49.5 C71 61.5 62.5 71.5 50 77.5 Z" fill="#67e8f9" opacity="0.4"/>
+  <path d="M29 31.5 L50 24 L50 51.5 L29 51.5 Z" fill="#0c1a3a" opacity="0.9"/>
+  <path d="M36 47 l6 6 l14 -14" stroke="#67e8f9" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neonGlow)"/>
 </svg>

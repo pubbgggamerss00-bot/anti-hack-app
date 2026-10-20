@@ -162,11 +162,17 @@ export function AppShell() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background font-size-md" data-font={font}>
+    <div className="relative flex min-h-screen flex-col font-size-md" data-font={font}>
+      {/* شنابرهای نئونی شناور پس‌زمینه */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div className="neon-orb start-[-12%] top-[-8%] h-64 w-64 bg-primary/25" />
+        <div className="neon-orb bottom-[12%] end-[-10%] h-72 w-72 bg-neon-purple/20" style={{ animationDelay: '-8s' }} />
+      </div>
       {showDisclaimer && <Disclaimer text={data.disclaimer} onAccept={acceptDisclaimer} />}
 
       {/* هدر */}
-      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 shadow-[0_0_24px_-8px_color-mix(in_oklch,var(--primary)_45%,transparent)] backdrop-blur-xl">
+        <div className="glow-line absolute inset-x-0 bottom-0 h-px opacity-80" aria-hidden="true" />
         <div className="mx-auto flex h-14 max-w-lg items-center gap-2 px-4">
           {!isRoot ? (
             <button
@@ -177,8 +183,8 @@ export function AppShell() {
               <ChevronLeft className="h-5 w-5" />
             </button>
           ) : (
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy dark:bg-navy">
-              <img src="/logo.svg" alt="" className="h-6 w-6" />
+            <div className="neon-ring flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy">
+              <img src="/logo.svg" alt="" className="neon-pulse h-6 w-6" />
             </div>
           )}
           <h1 className="min-w-0 flex-1 truncate text-sm font-bold sm:text-base">{title}</h1>
@@ -215,9 +221,10 @@ export function AppShell() {
 
       {/* نویگیشن بار پایین */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-card/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-md"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-card/85 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_28px_-12px_color-mix(in_oklch,var(--primary)_40%,transparent)] backdrop-blur-xl"
         aria-label="ناوبری اصلی"
       >
+        <div className="glow-line absolute inset-x-0 top-0 h-px opacity-60" aria-hidden="true" />
         <div className="mx-auto grid max-w-lg grid-cols-4">
           {TABS.map((tab) => {
             const active = cur.name === tab.name || (tab.name === 'home' && cur.name === 'pro' && false)
@@ -232,10 +239,10 @@ export function AppShell() {
               >
                 <span
                   className={`flex h-8 w-14 items-center justify-center rounded-full transition ${
-                    active ? 'bg-primary/15' : ''
+                    active ? 'bg-primary/15 shadow-[0_0_16px_-2px_color-mix(in_oklch,var(--primary)_60%,transparent)]' : ''
                   }`}
                 >
-                  <DynIcon name={tab.icon} className="h-5 w-5" />
+                  <DynIcon name={tab.icon} className={`h-5 w-5 ${active ? 'neon-pulse' : ''}`} />
                 </span>
                 {tab.label}
               </button>

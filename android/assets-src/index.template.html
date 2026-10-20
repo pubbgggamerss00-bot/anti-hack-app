@@ -11,33 +11,45 @@
 @font-face { font-family:'Vazirmatn'; font-weight:700; font-display:swap; src:url(data:font/woff2;base64,__FONT700__) format('woff2'); }
 @font-face { font-family:'Vazirmatn'; font-weight:800; font-display:swap; src:url(data:font/woff2;base64,__FONT800__) format('woff2'); }
 
-/* ─── توکن‌های تم سرمه‌ای/طلایی ─── */
+/* ─── توکن‌های تم نئونی آبی ─── */
 :root{
-  --background:#f6f5f1; --foreground:#252b3d; --card:#ffffff; --card-foreground:#252b3d;
-  --primary:#dfa73e; --primary-foreground:#1f2436; --secondary:#edebe4; --secondary-foreground:#333a4d;
-  --muted:#f0eee8; --muted-foreground:#6b7080; --accent:#efe5cf; --destructive:#e0454d;
-  --border:#dfddd5; --navy:#2b3147; --gold:#dfa73e;
+  --background:#eef4fd; --foreground:#14204a; --card:#ffffff; --card-foreground:#14204a;
+  --primary:#2563eb; --primary-foreground:#ffffff; --secondary:#dde8fb; --secondary-foreground:#1a2c5e;
+  --muted:#e3ecfb; --muted-foreground:#4c5f8f; --accent:#d9e7fd; --destructive:#e0454d;
+  --border:#c9d9f6; --navy:#16255e; --gold:#1d6ef0;
   --emerald:#10b981; --emerald-dark:#059669; --amber:#f59e0b; --amber-dark:#d97706; --orange:#f97316;
+  --neon-cyan:#0891b2; --neon-pink:#db2777; --neon-purple:#9333ea; --neon-green:#059669;
+  --glow1:rgba(37,99,235,.10); --glow2:rgba(147,51,234,.07); --grid:rgba(22,37,94,.05);
 }
 .dark{
-  --background:#141826; --foreground:#ece9e2; --card:#1b2030; --card-foreground:#ece9e2;
-  --primary:#eab54e; --primary-foreground:#171b2a; --secondary:#232939; --secondary-foreground:#ece9e2;
-  --muted:#212735; --muted-foreground:#8d93a3; --accent:#2a2c33; --destructive:#e35457;
-  --border:#2a3040; --navy:#0e1220; --gold:#eab54e;
+  --background:#060b1e; --foreground:#e2ecff; --card:#121c3e; --card-foreground:#e2ecff;
+  --primary:#38bdf8; --primary-foreground:#06102a; --secondary:#1b2750; --secondary-foreground:#e2ecff;
+  --muted:#19244a; --muted-foreground:#8ea0c4; --accent:#1e2d5c; --destructive:#f0525f;
+  --border:#26345f; --navy:#0a1330; --gold:#38d0f8;
   --emerald:#34d399; --emerald-dark:#34d399; --amber:#fbbf24; --amber-dark:#fbbf24; --orange:#fb923c;
+  --neon-cyan:#22d3ee; --neon-pink:#f472b6; --neon-purple:#c084fc; --neon-green:#34d399;
+  --glow1:rgba(56,189,248,.17); --glow2:rgba(192,132,252,.13); --grid:rgba(56,189,248,.06);
 }
 *{margin:0;padding:0;box-sizing:border-box;border-color:var(--border)}
 html{font-family:'Vazirmatn',system-ui,sans-serif;-webkit-text-size-adjust:100%}
-body{background:var(--background);color:var(--foreground);font-size:var(--appfs,16px);line-height:1.6;overflow-x:hidden}
+body{color:var(--foreground);font-size:var(--appfs,16px);line-height:1.6;overflow-x:hidden;
+  background-color:var(--background);
+  background-image:
+    radial-gradient(55rem 38rem at 88% -8%,var(--glow1),transparent 62%),
+    radial-gradient(48rem 34rem at 6% 108%,var(--glow2),transparent 62%),
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:100% 100%,100% 100%,2.75rem 2.75rem,2.75rem 2.75rem;
+  background-attachment:fixed}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input{font-family:inherit}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--gold) 45%,transparent);border-radius:99px}
+::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--primary) 50%,transparent);border-radius:99px;box-shadow:0 0 8px color-mix(in srgb,var(--primary) 45%,transparent)}
 
 /* ─── چیدمان کلی ─── */
 #app{min-height:100vh;display:flex;flex-direction:column}
-header.top{position:sticky;top:0;z-index:40;border-bottom:1px solid color-mix(in srgb,var(--border) 60%,transparent);background:color-mix(in srgb,var(--background) 85%,transparent);backdrop-filter:blur(10px)}
+header.top{position:sticky;top:0;z-index:40;border-bottom:1px solid color-mix(in srgb,var(--border) 60%,transparent);background:color-mix(in srgb,var(--background) 80%,transparent);backdrop-filter:blur(10px);box-shadow:0 10px 30px -14px color-mix(in srgb,var(--primary) 45%,transparent)}
 .topin{max-width:32rem;margin:0 auto;height:3.5rem;display:flex;align-items:center;gap:.5rem;padding:0 1rem}
 .topin h1{min-width:0;flex:1;font-size:.95rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(min-width:640px){.topin h1{font-size:1rem}}
@@ -46,16 +58,16 @@ header.top{position:sticky;top:0;z-index:40;border-bottom:1px solid color-mix(in
 .logobox{display:flex;align-items:center;justify-content:center;width:2.25rem;height:2.25rem;flex-shrink:0;border-radius:.75rem;background:var(--navy)}
 .logobox svg{width:1.5rem;height:1.5rem}
 .probtn{display:flex;align-items:center;gap:.375rem;height:2.25rem;padding:0 .75rem;border-radius:.75rem;font-size:.75rem;font-weight:700;transition:.15s;flex-shrink:0}
-.probtn.free{background:var(--primary);color:var(--primary-foreground);box-shadow:0 4px 6px -1px rgba(0,0,0,.1)}
+.probtn.free{background:var(--primary);color:var(--primary-foreground);box-shadow:0 0 16px -4px color-mix(in srgb,var(--primary) 75%,transparent)}
 .probtn.on{background:color-mix(in srgb,var(--primary) 15%,transparent);color:var(--primary)}
 .probtn:active{transform:scale(.96)}
 main{max-width:32rem;width:100%;margin:0 auto;flex:1;padding:1rem 1rem 7rem}
-nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:40;border-top:1px solid color-mix(in srgb,var(--border) 60%,transparent);background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(10px);padding-bottom:env(safe-area-inset-bottom)}
+nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:40;border-top:1px solid color-mix(in srgb,var(--border) 60%,transparent);background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(10px);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -10px 28px -14px color-mix(in srgb,var(--primary) 40%,transparent)}
 .navin{max-width:32rem;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
 .navbtn{display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:.625rem 0;font-size:.6875rem;font-weight:500;color:var(--muted-foreground);transition:.15s}
 .navbtn .pill{display:flex;align-items:center;justify-content:center;width:3.5rem;height:2rem;border-radius:99px;transition:.2s}
-.navbtn.active{color:var(--primary)}
-.navbtn.active .pill{background:color-mix(in srgb,var(--primary) 15%,transparent)}
+.navbtn.active{color:var(--primary);text-shadow:0 0 12px color-mix(in srgb,var(--primary) 65%,transparent)}
+.navbtn.active .pill{background:color-mix(in srgb,var(--primary) 15%,transparent);box-shadow:0 0 16px -4px color-mix(in srgb,var(--primary) 65%,transparent)}
 .ic{width:1.25rem;height:1.25rem;flex-shrink:0}
 .ic.sm{width:1rem;height:1rem}.ic.xs{width:.875rem;height:.875rem}.ic.xxs{width:.75rem;height:.75rem}.ic.lg{width:1.5rem;height:1.5rem}.ic.xl{width:1.75rem;height:1.75rem}.ic.xxl{width:2rem;height:2rem}
 
@@ -82,7 +94,7 @@ nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:40;border-top:1px soli
 .iconrow{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;padding:1rem;border-radius:1rem;font-size:.75rem;font-weight:800}
 .badge-gold{display:flex;align-items:center;gap:.25rem;border-radius:99px;background:color-mix(in srgb,var(--primary) 15%,transparent);color:var(--primary);padding:.25rem .5rem;font-size:.5625rem;font-weight:700}
 .badge-free{border-radius:99px;background:color-mix(in srgb,var(--emerald) 15%,transparent);color:var(--emerald-dark);padding:.125rem .5rem;font-size:.5625rem;font-weight:700}
-.gold-glow{box-shadow:0 0 0 1px color-mix(in srgb,var(--gold) 35%,transparent),0 8px 30px -10px color-mix(in srgb,var(--gold) 35%,transparent)}
+.gold-glow{box-shadow:0 0 0 1px color-mix(in srgb,var(--primary) 40%,transparent),0 0 22px -4px color-mix(in srgb,var(--primary) 45%,transparent),0 14px 44px -14px color-mix(in srgb,var(--primary) 55%,transparent)}
 .spin{animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -95,7 +107,16 @@ nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:40;border-top:1px soli
 .scanline{position:absolute;left:0;right:0;height:2.5rem;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--primary) 10%,transparent),transparent);animation:scanline 1.6s ease-in-out infinite}
 @keyframes pulsering{0%{transform:scale(.9);opacity:.7}70%{transform:scale(1.25);opacity:0}100%{opacity:0}}
 .pulse-ring{position:relative}
-.pulse-ring::after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid var(--gold);animation:pulsering 1.8s ease-out infinite}
+.pulse-ring::after{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid var(--primary);box-shadow:0 0 14px color-mix(in srgb,var(--primary) 60%,transparent);animation:pulsering 1.8s ease-out infinite}
+/* گرادیان نئونی کارت‌های ویژه */
+.neonhero{background:
+  radial-gradient(120% 160% at 85% 0%,color-mix(in srgb,var(--primary) 30%,transparent),transparent 55%),
+  radial-gradient(110% 140% at 10% 110%,color-mix(in srgb,var(--neon-purple) 26%,transparent),transparent 55%),
+  linear-gradient(160deg,#122452,var(--navy) 55%,#0b1330)}
+.neontext{color:var(--primary);text-shadow:0 0 10px color-mix(in srgb,var(--primary) 60%,transparent),0 0 34px color-mix(in srgb,var(--primary) 35%,transparent)}
+.chip.c1{border:1px solid color-mix(in srgb,var(--primary) 50%,transparent);background:color-mix(in srgb,var(--primary) 20%,transparent);box-shadow:0 0 10px -2px color-mix(in srgb,var(--primary) 70%,transparent)}
+.chip.c2{border:1px solid color-mix(in srgb,var(--neon-purple) 50%,transparent);background:color-mix(in srgb,var(--neon-purple) 20%,transparent)}
+.chip.c3{border:1px solid color-mix(in srgb,var(--neon-pink) 50%,transparent);background:color-mix(in srgb,var(--neon-pink) 20%,transparent)}
 
 /* ─── بلوک‌های درس ─── */
 .blk{border:1px solid var(--border);background:var(--card);border-radius:1.5rem;padding:1rem}
@@ -443,14 +464,14 @@ function homeHtml() {
   const scoreColor = score === null ? 'muted' : score >= 90 ? 'em' : score >= 70 ? '' : 'red';
   const scoreCss = score === null ? 'color:var(--muted-foreground)' : score >= 90 ? 'color:var(--emerald)' : score >= 70 ? 'color:var(--primary)' : 'color:var(--destructive)';
   return '<div class="space">'
-    + '<section class="p15 anim" style="position:relative;overflow:hidden;border-radius:1.5rem;background:var(--navy);color:#fff">'
-    + '<div style="position:absolute;left:-2rem;top:-2rem;width:9rem;height:9rem;border-radius:99px;background:color-mix(in srgb,var(--primary) 20%,transparent);filter:blur(24px)"></div>'
-    + '<div style="position:absolute;right:-1.5rem;bottom:-2.5rem;width:8rem;height:8rem;border-radius:99px;background:color-mix(in srgb,var(--primary) 10%,transparent);filter:blur(24px)"></div>'
+    + '<section class="p15 anim neonhero gold-glow" style="position:relative;overflow:hidden;border-radius:1.5rem;color:#fff">'
+    + '<div style="position:absolute;left:-2rem;top:-2rem;width:9rem;height:9rem;border-radius:99px;background:color-mix(in srgb,var(--primary) 30%,transparent);filter:blur(24px)"></div>'
+    + '<div style="position:absolute;right:-1.5rem;bottom:-2.5rem;width:8rem;height:8rem;border-radius:99px;background:color-mix(in srgb,var(--neon-purple) 25%,transparent);filter:blur(24px)"></div>'
     + '<div class="row" style="position:relative">'
-    + '<span class="shrink0" style="width:4rem;height:4rem">' + LOGO + '</span>'
-    + '<div class="grow"><h2 class="t18 eb">اپلیکیشن امنیتی ضد هک</h2>'
+    + '<span class="shrink0" style="width:4rem;height:4rem;filter:drop-shadow(0 0 14px color-mix(in srgb,var(--primary) 70%,transparent))">' + LOGO + '</span>'
+    + '<div class="grow"><h2 class="t18 eb">اپلیکیشن امنیتی <span class="neontext">ضد هک</span></h2>'
     + '<p class="t12 lh6" style="color:rgba(255,255,255,.75)">مرجع آفلاین حریم خصوصی و امنیت</p>'
-    + '<div class="row" style="gap:.375rem;margin-top:.375rem;flex-wrap:wrap"><span class="chip">۱۰۰٪ آفلاین</span><span class="chip">' + fa(DATA.lessons.length) + ' مبحث جامع</span><span class="chip">' + fa(DATA.tools.length) + ' ابزار مجهز</span></div>'
+    + '<div class="row" style="gap:.375rem;margin-top:.375rem;flex-wrap:wrap"><span class="chip c1">۱۰۰٪ آفلاین</span><span class="chip c2">' + fa(DATA.lessons.length) + ' مبحث جامع</span><span class="chip c3">' + fa(DATA.tools.length) + ' ابزار مجهز</span></div>'
     + '</div></div></section>'
 
     + '<section class="card pad anim d1"><div class="row" style="justify-content:space-between">'
@@ -510,7 +531,7 @@ function lessonDetailHtml(id) {
   if (!l.isFree && !S.isPro) return proGateHtml();
   const blk = (icon, tone, title, text) => '<section class="blk ' + tone + '" aria-label="' + title + '"><h3><span class="bicon ' + tone + '">' + ic(icon, 'xs') + '</span>' + title + '</h3><p>' + esc(text) + '</p></section>';
   return '<article class="space3" aria-label="درس: ' + esc(l.title) + '" style="padding-bottom:1rem">'
-    + '<header class="p15" style="border-radius:1.5rem;background:var(--navy);color:#fff"><div class="rowb"><span style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;flex-shrink:0;border-radius:1rem;background:rgba(255,255,255,.1)">' + ic(l.icon, 'lg') + '</span><div class="grow"><h2 class="t14 eb" style="line-height:1.75rem">' + esc(l.title) + '</h2><p class="t11 lh5" style="margin-top:.25rem;color:rgba(255,255,255,.7)">' + esc(l.subtitle) + '</p></div></div></header>'
+    + '<header class="p15 neonhero gold-glow" style="border-radius:1.5rem;color:#fff"><div class="rowb"><span style="display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;flex-shrink:0;border-radius:1rem;background:rgba(255,255,255,.1)">' + ic(l.icon, 'lg') + '</span><div class="grow"><h2 class="t14 eb" style="line-height:1.75rem">' + esc(l.title) + '</h2><p class="t11 lh5" style="margin-top:.25rem;color:rgba(255,255,255,.7)">' + esc(l.subtitle) + '</p></div></div></header>'
     + blk('BookOpen', 'neutral', 'مقدمه', l.intro)
     + '<section class="card pad" style="border-color:color-mix(in srgb,var(--primary) 40%,transparent)"><h3 class="row" style="gap:.5rem;margin-bottom:.5rem;font-size:.8125rem;font-weight:800;color:var(--primary)">' + ic('FileText','xs') + esc(l.sectionTitle) + '</h3><p class="t13 lh8" style="color:color-mix(in srgb,var(--foreground) 90%,transparent)">' + esc(l.text) + '</p></section>'
     + blk('AlertTriangle', 'danger', 'هشدار خطر', l.alert)
@@ -561,7 +582,7 @@ async function runShieldScan() {
 function shieldHtml() {
   const r = shield.result;
   const C = 2 * Math.PI * 52;
-  const gaugeColor = !r ? '#71717a' : r.score >= 90 ? '#10b981' : r.score >= 70 ? '#f0b429' : '#ef4444';
+  const gaugeColor = !r ? '#71717a' : r.score >= 90 ? '#34d399' : r.score >= 70 ? '#38bdf8' : '#ef4444';
   let html = '<div class="space3">'
     + '<div class="card center p15 gold-glow" style="border-color:color-mix(in srgb,var(--primary) 40%,transparent)">'
     + '<div class="gauge"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--muted)" stroke-width="10"/>'
@@ -907,9 +928,9 @@ async function simulateMyket() {
 }
 function proHtml() {
   if (S.isPro) {
-    return '<div class="space"><section class="p15 center gold-glow" style="border-radius:1.5rem;background:var(--navy);color:#fff"><div style="position:relative">'
-      + '<span style="display:flex;align-items:center;justify-content:center;width:4rem;height:4rem;margin:0 auto;border-radius:1.5rem;background:var(--primary);color:var(--primary-foreground)">' + ic('Crown','xl') + '</span>'
-      + '<h2 class="t14 eb" style="margin-top:.75rem;color:var(--primary)">ارتقا به نسخه پرو و ورود به قلمرو امنیت محض</h2>'
+    return '<div class="space"><section class="p15 center gold-glow neonhero" style="border-radius:1.5rem;color:#fff"><div style="position:relative">'
+      + '<span style="display:flex;align-items:center;justify-content:center;width:4rem;height:4rem;margin:0 auto;border-radius:1.5rem;background:var(--primary);color:var(--primary-foreground);box-shadow:0 0 26px -4px color-mix(in srgb,var(--primary) 80%,transparent)">' + ic('Crown','xl') + '</span>'
+      + '<h2 class="t14 eb neontext" style="margin-top:.75rem">ارتقا به نسخه پرو و ورود به قلمرو امنیت محض</h2>'
       + '<p class="t11 lh6" style="margin-top:.375rem;color:rgba(255,255,255,.75)">با یک‌بار فعالسازی نسخه پرو، به تمامی ۲۰ درس جامع آموزشی ضد هک و ۱۳ ابزار پیشرفته امنیتی شامل پنهان‌یاب بدافزار، کاوشگر دسترسی‌ها و سپر اسکن سریع نفوذ دسترسی نامحدود و مادام‌العمر پیدا کنید.</p>'
       + '</div></section>'
       + '<div class="card center" style="border-color:color-mix(in srgb,var(--emerald) 40%,transparent);background:color-mix(in srgb,var(--emerald) 10%,transparent);padding:1.5rem;animation:fadeUp .3s ease both">'
@@ -918,10 +939,10 @@ function proHtml() {
       + '<button class="btn sec" data-act="deactivate-pro" style="margin-top:1rem;border-color:color-mix(in srgb,var(--destructive) 40%,transparent);color:var(--destructive);background:transparent">غیرفعالسازی لایسنس (تست)</button></div></div>';
   }
   return '<div class="space">'
-    + '<section class="p15 center gold-glow" style="position:relative;overflow:hidden;border-radius:1.5rem;background:var(--navy);color:#fff">'
-    + '<div style="position:absolute;left:-2.5rem;top:-2.5rem;width:10rem;height:10rem;border-radius:99px;background:color-mix(in srgb,var(--primary) 25%,transparent);filter:blur(30px)"></div>'
-    + '<div style="position:relative"><span style="display:flex;align-items:center;justify-content:center;width:4rem;height:4rem;margin:0 auto;border-radius:1.5rem;background:var(--primary);color:var(--primary-foreground)">' + ic('Crown','xl') + '</span>'
-    + '<h2 class="t14 eb" style="margin-top:.75rem;color:var(--primary)">ارتقا به نسخه پرو و ورود به قلمرو امنیت محض</h2>'
+    + '<section class="p15 center gold-glow neonhero" style="position:relative;overflow:hidden;border-radius:1.5rem;color:#fff">'
+    + '<div style="position:absolute;left:-2.5rem;top:-2.5rem;width:10rem;height:10rem;border-radius:99px;background:color-mix(in srgb,var(--primary) 30%,transparent);filter:blur(30px)"></div>'
+    + '<div style="position:relative"><span style="display:flex;align-items:center;justify-content:center;width:4rem;height:4rem;margin:0 auto;border-radius:1.5rem;background:var(--primary);color:var(--primary-foreground);box-shadow:0 0 26px -4px color-mix(in srgb,var(--primary) 80%,transparent)">' + ic('Crown','xl') + '</span>'
+    + '<h2 class="t14 eb neontext" style="margin-top:.75rem">ارتقا به نسخه پرو و ورود به قلمرو امنیت محض</h2>'
     + '<p class="t11 lh6" style="margin-top:.375rem;color:rgba(255,255,255,.75)">با یک‌بار فعالسازی نسخه پرو، به تمامی ۲۰ درس جامع آموزشی ضد هک و ۱۳ ابزار پیشرفته امنیتی شامل پنهان‌یاب بدافزار، کاوشگر دسترسی‌ها و سپر اسکن سریع نفوذ دسترسی نامحدود و مادام‌العمر پیدا کنید.</p></div></section>'
     + '<section class="space3" aria-label="ویژگی‌های نسخه حرفه‌ای"><h3 class="t13 eb" style="padding:0 .25rem">ویژگی‌های بی‌نظیر نسخه حرفه‌ای (PRO):</h3>'
     + PRO_FEATURES.map((f, i) => '<div class="card rowb" style="padding:.875rem;animation:fadeUp .3s ease both;animation-delay:' + (i * 0.06) + 's"><span style="display:flex;align-items:center;justify-content:center;width:2.5rem;height:2.5rem;flex-shrink:0;border-radius:.75rem;background:color-mix(in srgb,var(--primary) 12%,transparent)">' + ic(f.icon, 'sm') + '</span><div><p class="t125 eb">' + f.title + '</p><p class="t11 lh5 muted" style="margin-top:.125rem">' + f.desc + '</p></div></div>').join('')

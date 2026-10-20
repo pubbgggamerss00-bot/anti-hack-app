@@ -17,23 +17,26 @@ export function HomeScreen() {
 
   return (
     <div className="space-y-4">
-      {/* هیرو */}
+      {/* هیرو نئونی */}
       <motion.section
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-3xl bg-navy p-5 text-white gold-glow"
+        className="neon-hero gold-glow relative overflow-hidden rounded-3xl p-5 text-white"
       >
-        <div className="absolute -left-8 -top-8 h-36 w-36 rounded-full bg-primary/20 blur-2xl" aria-hidden="true" />
-        <div className="absolute -bottom-10 -right-6 h-32 w-32 rounded-full bg-primary/10 blur-2xl" aria-hidden="true" />
+        <div className="absolute -left-8 -top-8 h-36 w-36 rounded-full bg-primary/30 blur-2xl" aria-hidden="true" />
+        <div className="absolute -bottom-10 -right-6 h-32 w-32 rounded-full bg-neon-purple/25 blur-2xl" aria-hidden="true" />
+        <div className="absolute left-1/2 top-1/3 h-24 w-24 -translate-x-1/2 rounded-full bg-neon-pink/15 blur-2xl" aria-hidden="true" />
         <div className="relative flex items-center gap-4">
-          <img src="/logo.svg" alt="لوگوی ضد هک — سپر طلایی" className="h-16 w-16 shrink-0 drop-shadow-lg" />
+          <img src="/logo.svg" alt="لوگوی ضد هک — سپر نئونی" className="neon-pulse h-16 w-16 shrink-0 drop-shadow-[0_0_18px_rgba(56,189,248,0.65)]" />
           <div className="min-w-0">
-            <h2 className="text-lg font-extrabold">اپلیکیشن امنیتی ضد هک</h2>
+            <h2 className="text-lg font-extrabold">
+              اپلیکیشن امنیتی <span className="neon-text">ضد هک</span>
+            </h2>
             <p className="text-xs leading-6 text-white/75">مرجع آفلاین حریم خصوصی و امنیت</p>
             <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-              <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-bold">۱۰۰٪ آفلاین</span>
-              <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-bold">۲۰ مبحث جامع</span>
-              <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-bold">۱۳ ابزار مجهز</span>
+              <span className="rounded-full border border-primary/50 bg-primary/20 px-2.5 py-0.5 text-[11px] font-bold text-primary-foreground shadow-[0_0_10px_-2px_color-mix(in_oklch,var(--primary)_70%,transparent)]">۱۰۰٪ آفلاین</span>
+              <span className="rounded-full border border-neon-purple/50 bg-neon-purple/20 px-2.5 py-0.5 text-[11px] font-bold">۲۰ مبحث جامع</span>
+              <span className="rounded-full border border-neon-pink/50 bg-neon-pink/20 px-2.5 py-0.5 text-[11px] font-bold">۱۳ ابزار مجهز</span>
             </div>
           </div>
         </div>
@@ -87,8 +90,8 @@ export function HomeScreen() {
           onClick={() => push({ name: 'lessons' })}
           className="group flex flex-col items-start gap-2 rounded-3xl border border-border bg-card p-4 text-right transition hover:border-primary/50 hover:shadow-lg"
         >
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/15">
-            <BookOpen className="h-6 w-6 text-primary" aria-hidden="true" />
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-neon-cyan/40 bg-neon-cyan/15 shadow-[0_0_14px_-2px_color-mix(in_oklch,var(--neon-cyan)_60%,transparent)]">
+            <BookOpen className="h-6 w-6 text-neon-cyan" aria-hidden="true" />
           </span>
           <span className="text-sm font-extrabold">کتابخانه آموزشی</span>
           <span className="text-[11px] leading-5 text-muted-foreground">
@@ -107,8 +110,8 @@ export function HomeScreen() {
           onClick={() => push({ name: 'tools' })}
           className="group flex flex-col items-start gap-2 rounded-3xl border border-border bg-card p-4 text-right transition hover:border-primary/50 hover:shadow-lg"
         >
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/15">
-            <Wrench className="h-6 w-6 text-primary" aria-hidden="true" />
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-neon-pink/40 bg-neon-pink/15 shadow-[0_0_14px_-2px_color-mix(in_oklch,var(--neon-pink)_60%,transparent)]">
+            <Wrench className="h-6 w-6 text-neon-pink" aria-hidden="true" />
           </span>
           <span className="text-sm font-extrabold">جعبه ابزار امنیتی</span>
           <span className="text-[11px] leading-5 text-muted-foreground">
@@ -130,8 +133,8 @@ export function HomeScreen() {
           onClick={() => push({ name: 'tool', route: 'checklist' })}
           className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3.5 text-right transition hover:border-primary/50"
         >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15">
-            <ListChecks className="h-5 w-5 text-emerald-500" aria-hidden="true" />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-neon-green/40 bg-neon-green/15 shadow-[0_0_12px_-2px_color-mix(in_oklch,var(--neon-green)_55%,transparent)]">
+            <ListChecks className="h-5 w-5 text-neon-green" aria-hidden="true" />
           </span>
           <span className="min-w-0">
             <span className="block text-xs font-extrabold">شناسنامه پدافند</span>
@@ -146,8 +149,8 @@ export function HomeScreen() {
           onClick={() => push({ name: 'tool', route: 'password-generator' })}
           className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3.5 text-right transition hover:border-primary/50"
         >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/15">
-            <Zap className="h-5 w-5 text-amber-500" aria-hidden="true" />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-neon-purple/40 bg-neon-purple/15 shadow-[0_0_12px_-2px_color-mix(in_oklch,var(--neon-purple)_55%,transparent)]">
+            <Zap className="h-5 w-5 text-neon-purple" aria-hidden="true" />
           </span>
           <span className="min-w-0">
             <span className="block text-xs font-extrabold">ساخت رمز عبور قوی</span>

@@ -30,7 +30,7 @@ declare global {
 }
 
 /* نسخه فعلی برنامه (برای مقایسه با آخرین نسخه منتشرشده در گیت‌هاب) */
-const APP_VERSION = '1.2.0'
+const APP_VERSION = '1.3.0'
 const GH_RELEASE_API = 'https://api.github.com/repos/pubbgggamerss00-bot/anti-hack-app/releases/latest'
 
 interface ReleaseInfo {
