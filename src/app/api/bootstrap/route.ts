@@ -25,7 +25,7 @@ export async function GET() {
     checklist,
     disclaimer: DISCLAIMER_TEXT,
     lastScanScore: state?.lastScanScore ?? null,
-    version: '۱.۱.۰',
+    version: '۱.۲.۰',
     versionName: 'سپر امنیتی آفلاین',
   })
 }

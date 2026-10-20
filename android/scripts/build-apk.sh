@@ -10,6 +10,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"                           # android/
 APP="$ROOT/app"
 OUT="$ROOT/build"
 KEYSTORE="$ROOT/scripts/release.keystore"
+VERSION="${VERSION:-1.2.0}"
 
 rm -rf "$OUT"
 mkdir -p "$OUT/classes" "$OUT/dex" "$OUT/compiled-res" "$OUT/gen"
@@ -58,8 +59,8 @@ if [ ! -f "$KEYSTORE" ]; then
     -dname "CN=Anti Hack, OU=AbbasTech, O=AbbasTech, L=Tehran, C=IR" >/dev/null 2>&1
 fi
 "$SDK_BT/apksigner" sign --ks "$KEYSTORE" --ks-pass pass:antihack1404 \
-  --key-pass pass:antihack1404 --out "$OUT/AntiHack-v1.1.0.apk" "$OUT/aligned.apk"
+  --key-pass pass:antihack1404 --out "$OUT/AntiHack-v$VERSION.apk" "$OUT/aligned.apk"
 
-"$SDK_BT/apksigner" verify --print-certs "$OUT/AntiHack-v1.1.0.apk" | head -5
-ls -la "$OUT/AntiHack-v1.1.0.apk"
-echo "✓ APK ساخته شد: $OUT/AntiHack-v1.1.0.apk"
+"$SDK_BT/apksigner" verify --print-certs "$OUT/AntiHack-v$VERSION.apk" | head -5
+ls -la "$OUT/AntiHack-v$VERSION.apk"
+echo "✓ APK ساخته شد: $OUT/AntiHack-v$VERSION.apk"
