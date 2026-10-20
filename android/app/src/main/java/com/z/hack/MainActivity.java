@@ -1,4 +1,4 @@
-package com.abbastech.antihack;
+package com.z.hack;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -63,15 +63,15 @@ public class MainActivity extends Activity {
         webView.addJavascriptInterface(new AndroidBridge(), "AndroidBridge");
 
         webView.setWebViewClient(new WebViewClient());
-        webView.setBackgroundColor(Color.rgb(20, 24, 38));
+        webView.setBackgroundColor(Color.rgb(5, 10, 24));
         webView.setVerticalScrollBarEnabled(false);
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         // پس‌زمینه ناوبری همرنگ تم سرمه‌ای برنامه
         Window w = getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            w.setStatusBarColor(Color.rgb(20, 24, 38));
-            w.setNavigationBarColor(Color.rgb(20, 24, 38));
+            w.setStatusBarColor(Color.rgb(5, 10, 24));
+            w.setNavigationBarColor(Color.rgb(5, 10, 24));
             w.getDecorView().setSystemUiVisibility(0);
         }
 

@@ -1,4 +1,4 @@
-package com.abbastech.antihack;
+package com.z.hack;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;

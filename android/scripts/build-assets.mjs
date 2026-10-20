@@ -23,6 +23,9 @@ for (const a of data.simApps) delete a.id;
 const b64 = f => fs.readFileSync(path.join(project, 'public/fonts', f)).toString('base64');
 const logo = fs.readFileSync(path.join(project, 'public/logo.svg'), 'utf8')
   .replace(/\n\s*/g, ' ').trim();
+// آیکون واقعی برنامه (سپر نئونی) برای اسپلش‌اسکرین — data URI جیس‌اسکیپ‌ساز
+const appIconB64 = fs.readFileSync(path.join(root, 'assets-src/appicon.b64'), 'utf8').trim();
+const appIcon = 'data:image/jpeg;base64,' + appIconB64;
 
 const DISCLAIMER = `هدف این برنامه افزایش سطح آگاهی سایبری عموم مردم، تامین امنیت شبکه‌های اجتماعی و حفظ حریم خصوصی است. تمامی محتواها و کدهای موجود به صورت کاملاً مستقل و ۱۰۰٪ آفلاین توسعه یافته است.
 
@@ -33,6 +36,7 @@ const out = template
   .replace('__DATA__', JSON.stringify(data))
   .replace('__ICONS__', JSON.stringify(icons))
   .replace('__DISCLAIMER__', JSON.stringify(DISCLAIMER))
+  .replace('__APPICON__', appIcon)
   .replace('__FONT400__', b64('Vazirmatn-400.woff2'))
   .replace('__FONT500__', b64('Vazirmatn-500.woff2'))
   .replace('__FONT700__', b64('Vazirmatn-700.woff2'))
